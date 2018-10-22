@@ -1,5 +1,10 @@
 #! python3
 """
+BSD 3-Clause License
+
+Copyright (c) 2018, jaggiJ (jagged93 <AT> gmail <DOT> com), Aleksander Zubert 
+All rights reserved.
+
 Simulation of zombie attack on family.
 User input is names of family members as well as number of zombies to pit them against.
 """
