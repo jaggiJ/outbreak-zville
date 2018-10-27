@@ -79,9 +79,8 @@ while True:  # MAIN LOOP
         time.sleep(0.2)  # Time delay between each round.
         casualties = []  # Append here casualties from below for loop as they happen.
 
-        print('\nStart of round: ', roundNumber, '\n')  # Number of round
-        print(zombieChar, '\n', familyChar,
-              '\n')  # Zombies and Family characters going to fight that round
+        print('='*78, '\nStart of round: ', roundNumber, '\n' + '='*78)  # Number of round
+        print(zombieChar, '\n', familyChar, '\n' + '='*78)  # Zombies and Family characters going to fight that round
 
         """
         FIGHTING ROUND LOOP
@@ -152,7 +151,7 @@ while True:  # MAIN LOOP
         """
 
         if casualties:  # Prints round casualties and removes zombies fallen in that round
-            print(casualties, 'has been killed in this round')
+            print('='*78, '\n', casualties, 'has been killed in this round')
 
             for dead in casualties:  # iterating through list of strings that contains current round casualties
                 if dead in zombieChar:
@@ -166,9 +165,10 @@ while True:  # MAIN LOOP
     Prints how long fight lasted and all survivors from either team.
     """
 
-    print('\nThe fight lasted ', roundNumber * 3, 'seconds\n')
+    print('='*78, '\nThe fight lasted ', roundNumber * 3, 'seconds\n'+'='*78)
     print('Survivors are: ')
     for x in familyChar:
-        print(x)
+        print('', x)
     for x in zombieChar:
-        print(x)
+        print('', x)
+    print('=' * 78, end='')
