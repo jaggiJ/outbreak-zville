@@ -1,11 +1,12 @@
 ### Outbreak in Zville
 
-####Realism focused simulation of zombie outbreak in small community.       
+####Realism focused simulation of zombie outbreak in small community.    
 
-====================================================================================================  
-Outbreak in Zville in one sentence is: "What will really happen if zombie outbreak strike an isolated 
- village ?"  
-Are your village and your family prepared for zombie apocalipse ?   
+
+=================================================================================  
+Outbreak in Zville in one sentence is: **"What will really happen if zombie  
+ outbreak strike an isolated** village ?"    
+ Are your village and your family prepared for zombie apocalipse ?   
 Check your chances with random or custom conditions and  
 watch as death unfolds and things get screwed. 
 
@@ -38,9 +39,9 @@ equations._
 
 **Other interesting resources:**
 
-[Mathematical Modelling of Zombies](https://www.amazon.co.uk/Mathematical-Modelling-Zombies-Robert-Smith/dp/0776622102) 
-[The Little Book Of Zombie Mathematics: 25 Zombie-based Maths Problems](https://www.amazon.com/Little-Book-Zombie-Mathematics-Zombie-based/dp/1909832219)  
-[Zombies and Calculus](https://www.amazon.com/Zombies-Calculus-Colin-Adams/dp/0691173206)
+[Mathematical Modelling of Zombies](https://www.amazon.co.uk/Mathematical-Modelling-Zombies-Robert-Smith/dp/0776622102)  
+[The Little Book Of Zombie Mathematics: 25 Zombie-based Maths Problems](https://www.amazon.com/Little-Book-Zombie-Mathematics-Zombie-based/dp/1909832219)    
+[Zombies and Calculus](https://www.amazon.com/Zombies-Calculus-Colin-Adams/dp/0691173206)  
 
 **History of changes** 
 0.1     Full CLI monochrome. 

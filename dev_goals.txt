@@ -22,9 +22,9 @@ a-2. Create Zombie class entity and determine flags and variables that do matter
 
 2. TODO Menu update.
 a-1 menu choice intro, start new simulation - (random village, customised village) - family number
-    (user_choice with max or r for random number typical family)
-a-2 build databases for random names of family and villages
+    (user_choice with max or r for random number typical family) VVV
+a-2 build databases for random names of family and villages VVV
 
 1.TODO Introduction.
 a. make variables: village (population, name), family (names, numbers), zombies (numbers),
-    zombies_speed, virus_activation_time.
+    zombies_speed, virus_activation_time. XXX
