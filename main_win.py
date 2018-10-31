@@ -6,45 +6,69 @@ Copyright (c) 2018, jaggiJ (jagged93 <AT> gmail <DOT> com), Aleksander Zubert
 All rights reserved.
 
 Simulation of zombie attack on family.
-User input is names of family members as well as number of zombies to pit them against.
 """
 
-# importing functions used in program
 import random  # Used for random k6rolls to powerAdvantage resolution
 import sys  # Used to quit game on user enter input at choosing zombies number
 import time  # Used for delay between zombie hits
+from zville_functions import intro_game, user_menu_choice, village_gen,\
+    family_gen
+
 
 
 savedFamily = []  # List of family characters from which each game run will resets family members alive
+sim_speed = 1  # ilosc sekund na runde
 
 while True:  # MAIN LOOP
 
-    """
-    FAMILY GENERATION. 
-    Lists of family names and corresponding lists of their randomised stats are created.
-    List of family is retained in tuple from which each game iteration is stat list generated
-    as default (no names choosing is necessary each game).
-    """
+    while True:  # Handles user menu choices before game starts
+        main_choice = user_menu_choice()  # Main game menu returns integer
 
-    if not savedFamily:  # returns names of family from user input
-        while True:
-            name = input('Type family member name or enter:  ')
-            if name:
-                savedFamily.append(name)
-                name = False
-            elif not name and savedFamily:  # Second condition prevents quiting loop in case that user didnt type any family name at all. Error prevention.
-                savedFamily = tuple(savedFamily)
+        if main_choice == 0:  # Intro game
+            intro_game()  # Intro story
+            random_family = True  # not implemented, change to True when done
+            random_village = True
+            familyChar, familyStats = family_gen(random_family)
+            village = village_gen(random_village)
+            sim_speed = 2
+            break
+
+        elif main_choice == 5:  # sets game speed
+            while True:
+                sim_speed = input('Set sim speed between 0.2(slowest) to'
+                                   ' 10.0 (ultra fast). Default is 1')
+                if sim_speed.isdecimal() and float(sim_speed) < 10.1:
+                    if float(sim_speed) < 0.1:
+                        sim_speed = 1
+                    print('sim speed set =', sim_speed)
+                    sim_speed = 1/float(sim_speed)
+                    break
+            continue
+
+        elif main_choice == 1:  # Starts random game
+            random_family = True  # Not implemented
+            random_village = True
+            family = family_gen(random_family)
+            village = village_gen(random_village)
+            break
+        elif main_choice == 2: # Custom game
+            print('You are about to start New Simulation with family or village'
+                  'designed by user.')
+            if input('(y)es or (n)o ?').lower()[0] == 'n':
+                continue
+            else:
+                random_family = False
+                random_village = False
                 break
-    familyChar = list(savedFamily)  # names of family members
-    familyStats = []  # stats of family members [physical, mental, HP, morale]
+        elif main_choice == 3:  # returns [village, population size, time]
+            random_village = False
+            village = village_gen(random_village)
+            continue
 
-    for i in familyChar:  # returns stats of family members (semi-randomised)
-        physical = random.randint(2, 5)
-        mental = random.randint(2, 5)
-        HP = physical*2  # HP is double of physical
-        morale = 3  # not used in game
-        familyStats.append([physical, mental, HP, morale])
 
+
+
+    ## FAMILY GENERATION MUST HAPPEN BETWEEN HERE
     """
     # ADVERSARIES GENERATION. Their numbers and stats are generated each simulation.
     """
@@ -87,7 +111,7 @@ while True:  # MAIN LOOP
         """
         for strZombie in zombieChar:  # All zombies attack chosen family member in sequence. That is one round of fight.
 
-            time.sleep(0.2)  # Time delay between each zombie hit
+            time.sleep(sim_speed)  # Time delay between each zombie hit
 
             # Establishing who attacks who in this round:
             currentZombieStats = zombieStats[zombieChar.index(strZombie)]  # current zombie stats based on index number of the zombie name currently iterated
