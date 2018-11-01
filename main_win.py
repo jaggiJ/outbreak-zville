@@ -30,10 +30,10 @@ while True:  # MAIN LOOP
             random_village = True
             familyChar, familyStats = family_gen(random_family)
             village = village_gen(random_village)
-            sim_speed = 2
+            sim_speed = 2  # Speed is set slower because its probably first game
             break
 
-        elif main_choice == 5:  # sets game speed
+        elif main_choice == 5:  # Set Sim Speed
             while True:
                 sim_speed = input('Set sim speed between 0.2(slowest) to'
                                    ' 10.0 (ultra fast). Default is 1')
@@ -45,30 +45,31 @@ while True:  # MAIN LOOP
                     break
             continue
 
-        elif main_choice == 1:  # Starts random game
+        elif main_choice == 1:  # Start Random Sim
             random_family = True  # Not implemented
             random_village = True
-            family = family_gen(random_family)
+            familyChar, familyStats = family_gen(random_family)
             village = village_gen(random_village)
             break
-        elif main_choice == 2: # Custom game
+
+        elif main_choice == 2:  # Start Designed Sim
             print('You are about to start New Simulation with family or village'
                   'designed by user.')
             if input('(y)es or (n)o ?').lower()[0] == 'n':
                 continue
-            else:
-                random_family = False
-                random_village = False
-                break
-        elif main_choice == 3:  # returns [village, population size, time]
+            print('Do you want family that was (d)esigned or (r)andom family?')
+            TODO
+
+            break
+
+        elif main_choice == 3:  # Design Village
             random_village = False
             village = village_gen(random_village)
             continue
 
+        elif main_choice == 6:  # Exit Sim
+            sys.exit()
 
-
-
-    ## FAMILY GENERATION MUST HAPPEN BETWEEN HERE
     """
     # ADVERSARIES GENERATION. Their numbers and stats are generated each simulation.
     """

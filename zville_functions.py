@@ -83,7 +83,7 @@ def user_menu_choice():
     """
     print('='*80)
     print('+' * 30 + ' OUTBREAK IN ZVILLE ' + '+' * 30)
-    menu_choices = ['Intro Game', 'Start Random Sim', 'Start Custom Sim',
+    menu_choices = ['Intro Game', 'Start Designed Sim', 'Start Custom Sim',
                     'Design Village', 'Design Family', 'Set Sim Speed', 'Exit']
 
     for item in menu_choices:
@@ -103,56 +103,51 @@ def user_menu_choice():
 
 
 def family_gen(random_family):
-    """ Generates family names and stats appending them into existing lists
+    """ Generates/User input family names and random generates stats for them.
     :param  True or False - random or custom genration
     :return: [familyChar], [familyStats]
     """
+    familyChar = []
     if not random_family:  # user defined family names
-        familyChar = []
-
         while True:
             name = input('Type family member name or enter:  ')
             if name:
                 familyChar.append(name.title())
-            elif not name:
+            elif not name and not familyChar:
+                print('Must be at least one name.')
                 continue
+            else:  # minimum one name and user hit enter
+                break
     elif random_family:  # family size 1 - 8 , most likely  3-6 family , other ranges less likely
-        k100_roll = random.randint(1,100)
+        k100_roll = random.randint(1, 100)
 
-        if k100_roll in range(1,51):
-            size_f = random.randint(3,5)
-        elif k100_roll in range(51,81):
+        if k100_roll in range(1, 51):
+            size_f = random.randint(3, 5)
+        elif k100_roll in range(51, 81):
             size_f = int(random.choice('126'))
-        elif k100_roll in range(82,101):
+        elif k100_roll in range(82, 101):
             size_f = int(random.choice('78'))
 
         m_txt = open('dictio//names_male.txt')
         f_txt = open('dictio//names_female.txt')
-        male_names = m_txt.read().split('\n')
-        female_names = f_txt.read().split('\n')
+        male_names = m_txt.read().split('\n')  # all male names list
+        female_names = f_txt.read().split('\n')  # all female names list
 
-        """OK HERE IS WHAT NEEDS TO BE DONE
-        if family size is 2 then its 80 % there will be male or female, rest gender is random.
-        """
         if size_f == 2:
             if random.randint(1, 100) < 80:  # if family 2 members there is 80 % gender is opposite
                 familyChar.append(random.choice(male_names))
                 familyChar.append(random.choice(female_names))
         else:
+            for index in range(size_f):
+                gender = random.choice('mf')
 
-            for i in range(size_f):
-                gender = random.choice('m', 'f')
-                if size_f != 2:
-                    if gender == 'm':
-                        familyChar.append(random.choice(male_names))
-                    elif gender == 'f':
-                        familyChar.append(random.choice(female_names))
+                if gender == 'm':
+                    familyChar.append(random.choice(male_names))
+                elif gender == 'f':
+                    familyChar.append(random.choice(female_names))
 
-
-
-
-        spam = open('dictio//')
-
+        m_txt.close()
+        f_txt.close()
 
     familyStats = []  # stats of family members [physical, mental, HP, morale]
 
@@ -164,6 +159,8 @@ def family_gen(random_family):
         familyStats.append([physical, mental, HP, morale])
 
     return familyChar, familyStats
+
+
 
 
 
