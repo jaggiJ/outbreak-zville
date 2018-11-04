@@ -1,5 +1,5 @@
 #! python 3
-import random, time, sys
+import random, datetime, sys
 
 
 def intro_game():  # Runs when user choose Intro Game
@@ -83,7 +83,7 @@ def user_menu_choice():
     """
     print('='*80)
     print('+' * 30 + ' OUTBREAK IN ZVILLE ' + '+' * 30)
-    menu_choices = ['Intro Game', 'Start Designed Sim', 'Start Custom Sim',
+    menu_choices = ['Intro Game', 'Start Random Sim', 'Start Designed Sim',
                     'Design Village', 'Design Family', 'Set Sim Speed', 'Exit']
 
     for item in menu_choices:
@@ -122,11 +122,11 @@ def family_gen(random_family):
         k100_roll = random.randint(1, 100)
 
         if k100_roll in range(1, 51):
-            size_f = random.randint(3, 5)
+            size_f = random.randint(3, 5)  # 3 or 4 or 5 family members
         elif k100_roll in range(51, 81):
-            size_f = int(random.choice('126'))
+            size_f = int(random.choice('126'))  # 1 or 2 or 6 family members
         elif k100_roll in range(82, 101):
-            size_f = int(random.choice('78'))
+            size_f = int(random.choice('78'))  # 7 or 8 family members
 
         m_txt = open('dictio//names_male.txt')
         f_txt = open('dictio//names_female.txt')
@@ -161,7 +161,35 @@ def family_gen(random_family):
     return familyChar, familyStats
 
 
+def weather(daytime):
+    """
+    Generates list of strings depicting weather depending on time of day.
+    :param daytime: 'day'|'night'
+    :return: list of strings [wind strength, brightness, is_rain]
+    """
+    if daytime == 'day':
+        weather = (('calm', 'calm', 'calm', 'light breeze', 'light breeze',
+                    'light breeze', 'windy', 'windy', 'strong wind'),
+                   ('sunshine', 'bright', 'bright', 'cloudy', 'cloudy',
+                    'cloudy', 'dark'),
+                   ('dry', 'dry', 'damp', 'light rain', 'rains'), ('is warm',
+                    'is cool', 'is hot', 'is cold', 'is moderately warm'))
+        return [random.choice(weather[0]), random.choice(weather[1]),
+                random.choice(weather[2]), random.choice(weather[3])]
 
+
+
+def yes_or_no(question):  # Returns 'yes' or 'no' based on first letter of user input.
+
+    while True:
+        item = input(question)
+        if not item or item[0].lower() not in ['y', 'n']:
+            print('(y)es or (n)o are valid answers')
+            continue
+        elif item[0].lower() == 'y':
+            return 'yes'
+        elif item[0].lower() == 'n':
+            return 'no'
 
 
 

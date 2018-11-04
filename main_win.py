@@ -12,12 +12,20 @@ import random  # Used for random k6rolls to powerAdvantage resolution
 import sys  # Used to quit game on user enter input at choosing zombies number
 import time  # Used for delay between zombie hits
 from zville_functions import intro_game, user_menu_choice, village_gen,\
-    family_gen
+    family_gen, yes_or_no, weather
 
 
 
 savedFamily = []  # List of family characters from which each game run will resets family members alive
 sim_speed = 1  # ilosc sekund na runde
+random_village = True
+random_family = True
+weather = weather('day')
+locations = ['walking in a park', 'packing stuff into a car\'s trunk',
+             'watching a big TV in a saloon', 'playing a game of cards',
+             'quarreling passionately']
+intro_family = family_gen(True)  # random names for game story family
+patient_zero = random.choice(intro_family[0])
 
 while True:  # MAIN LOOP
 
@@ -26,7 +34,7 @@ while True:  # MAIN LOOP
 
         if main_choice == 0:  # Intro game
             intro_game()  # Intro story
-            random_family = True  # not implemented, change to True when done
+            random_family = True
             random_village = True
             familyChar, familyStats = family_gen(random_family)
             village = village_gen(random_village)
@@ -52,23 +60,85 @@ while True:  # MAIN LOOP
             village = village_gen(random_village)
             break
 
-        elif main_choice == 2:  # Start Designed Sim
-            print('You are about to start New Simulation with family or village'
-                  'designed by user.')
-            if input('(y)es or (n)o ?').lower()[0] == 'n':
-                continue
-            print('Do you want family that was (d)esigned or (r)andom family?')
-            TODO
+        elif main_choice == 2:  # Start Designed Sim, make checks whether family
+                     # or village are designed by user and asks for confirmation
 
-            break
+            if random_family == False and random_village == False:
+                print('Family: ' + ''.join(familyChar), '\n', village[:-1], 'sim'
+                      ' speed =', sim_speed)
+            elif random_family == False and random_village == True:
+                print('Family: ' + ' '.join(familyChar), '\nVillage name and '
+                                                         'size '
+                      'will be random and sim speed =', sim_speed)
+            elif random_family == True and random_village == False:
+                print('Village: '+' '.join(village[:-1]), '\nFamily members '
+                      'will be random and sim speed =', sim_speed)
+            else:
+                print('Nothing designed yet.')
+                continue
+
+            if yes_or_no('Do you want to start game with those'
+                         ' settings?') == 'no':
+                continue
+            else:
+                print('Setting village and family to random.')
+                random_family = True
+                random_village = True
+                break
 
         elif main_choice == 3:  # Design Village
             random_village = False
             village = village_gen(random_village)
             continue
+        elif main_choice == 4: # Design Family
+            random_family = False
+            familyChar, familyStats = family_gen(random_family)
+            continue
 
         elif main_choice == 6:  # Exit Sim
             sys.exit()
+
+    print('='*79)
+    # Do not worry. That is just a list of strings :D.
+
+    story = ['Village ', village[0], ' ', village[2],  # prints village name and date
+             '\npopulation size ', str(village[1]), '\nIt is ', weather[0],  # prints population size and weather
+             ' and ', weather[1], '. Also ', weather[2], ' and ', weather[3],
+             '.\n+', '='*77, '+\n', 'There ', 'is ' if len(intro_family[0]) == 1  # separating == line and random family names doing random thing
+             else 'are ', ', '.join(intro_family[0]), ' ',
+             random.choice(locations), '.\n', 'All of sudden ', patient_zero,
+             ' falls on ground, pale like snow'
+             ' and is all in tremors...\n', None]
+
+    timer = 0.05
+    for item in story:
+        if item == None and len(intro_family[0]) != 1:
+            intro_family[0].remove(patient_zero)
+
+            item = '%s are shocked...\n%s ' \
+                   'crouches trying to help. Something terrific happens.\n' \
+                   '%s turns into a zombie and bites his benefactor.\n' \
+                   'Blood rushes forth.\n' \
+                   'The village is faced with threat of %d zombies...\n' \
+                   % (', '.join(intro_family[0]), random.choice(intro_family[0]), patient_zero, len(intro_family)+1)
+        elif item == None:
+            item = 'There is nobody at hand to help. After a minute someone notices ' \
+                   'lying body\n... and runs away.\nMeanwhile %s arises as a' \
+                   ' zombie and seeks for his first victim.\nThe village is' \
+                   ' faced with treat of one zombie...\n' % patient_zero
+        for letter_item in item:
+            print(letter_item, end='')
+            time.sleep(timer)
+            if letter_item in '.?!+':
+                time.sleep(0.5)
+                continue
+            elif letter_item in '=':
+                timer = 0
+            else:
+                timer = 0.05
+                continue
+    print('=' * 79)
+
 
     """
     # ADVERSARIES GENERATION. Their numbers and stats are generated each simulation.
