@@ -14,12 +14,13 @@ import time  # Used for delay between zombie hits
 from zville_functions import intro_game, user_menu_choice, village_gen,\
     family_gen, yes_or_no, weather
 
-
-
 savedFamily = []  # List of family characters from which each game run will resets family members alive
 sim_speed = 1  # ilosc sekund na runde
 random_village = True
 random_family = True
+village = []
+familyChar = []
+familyStats = []
 weather = weather('day')
 locations = ['walking in a park', 'packing stuff into a car\'s trunk',
              'watching a big TV in a saloon', 'playing a game of cards',
@@ -44,7 +45,7 @@ while True:  # MAIN LOOP
         elif main_choice == 5:  # Set Sim Speed
             while True:
                 sim_speed = input('Set sim speed between 0.2(slowest) to'
-                                   ' 10.0 (ultra fast). Default is 1')
+                                  ' 10.0 (ultra fast). Default is 1')
                 if sim_speed.isdecimal() and float(sim_speed) < 10.1:
                     if float(sim_speed) < 0.1:
                         sim_speed = 1
@@ -61,16 +62,16 @@ while True:  # MAIN LOOP
             break
 
         elif main_choice == 2:  # Start Designed Sim, make checks whether family
-                     # or village are designed by user and asks for confirmation
+            # or village are designed by user and asks for confirmation
 
-            if random_family == False and random_village == False:
+            if not random_family and not random_village:
                 print('Family: ' + ''.join(familyChar), '\n', village[:-1], 'sim'
                       ' speed =', sim_speed)
-            elif random_family == False and random_village == True:
+            elif not random_family and random_village:
                 print('Family: ' + ' '.join(familyChar), '\nVillage name and '
                                                          'size '
                       'will be random and sim speed =', sim_speed)
-            elif random_family == True and random_village == False:
+            elif random_family and not random_village:
                 print('Village: '+' '.join(village[:-1]), '\nFamily members '
                       'will be random and sim speed =', sim_speed)
             else:
@@ -90,7 +91,7 @@ while True:  # MAIN LOOP
             random_village = False
             village = village_gen(random_village)
             continue
-        elif main_choice == 4: # Design Family
+        elif main_choice == 4:  # Design Family
             random_family = False
             familyChar, familyStats = family_gen(random_family)
             continue
@@ -108,24 +109,27 @@ while True:  # MAIN LOOP
              else 'are ', ', '.join(intro_family[0]), ' ',
              random.choice(locations), '.\n', 'All of sudden ', patient_zero,
              ' falls on ground, pale like snow'
-             ' and is all in tremors...\n', None]
+             ' and is all in tremors...\n', 'TWIST']
 
     timer = 0.05
     for item in story:
-        if item == None and len(intro_family[0]) != 1:
+        if item == 'TWIST' and len(intro_family[0]) != 1:
             intro_family[0].remove(patient_zero)
+            item = ('%s are shocked...\n%s '
+                   'crouches trying to help. Something terrific happens.\n'
+                   '%s turns into a zombie and bites his benefactor.\n'
+                   'Blood rushes forth.\n'
+                   'There are %d zombies to brave new world...\n'
+                   % (
+                   ', '.join(intro_family[0]), random.choice(intro_family[0]),
+                   patient_zero, len(intro_family) + 1))
 
-            item = '%s are shocked...\n%s ' \
-                   'crouches trying to help. Something terrific happens.\n' \
-                   '%s turns into a zombie and bites his benefactor.\n' \
-                   'Blood rushes forth.\n' \
-                   'The village is faced with threat of %d zombies...\n' \
-                   % (', '.join(intro_family[0]), random.choice(intro_family[0]), patient_zero, len(intro_family)+1)
-        elif item == None:
+        elif item == 'TWIST':
             item = 'There is nobody at hand to help. After a minute someone notices ' \
                    'lying body\n... and runs away.\nMeanwhile %s arises as a' \
-                   ' zombie and seeks for his first victim.\nThe village is' \
-                   ' faced with treat of one zombie...\n' % patient_zero
+                   ' zombie and seeks for his first victim.\nThere is just this' \
+                   ' one zombie to brave new world...\n' % patient_zero
+
         for letter_item in item:
             print(letter_item, end='')
             time.sleep(timer)
@@ -138,7 +142,6 @@ while True:  # MAIN LOOP
                 timer = 0.05
                 continue
     print('=' * 79)
-
 
     """
     # ADVERSARIES GENERATION. Their numbers and stats are generated each simulation.

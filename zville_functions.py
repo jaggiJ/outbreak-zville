@@ -1,5 +1,58 @@
 #! python 3
-import random, datetime, sys
+import random, datetime, sys, math
+
+
+def draw_grid_data(grid_data):
+    """
+    Prints grid data.
+    :param grid_data: list of lists that are grid
+    :return: None
+    """
+    for x_list in grid_data:  # grid has amount of lists exual to len(grid_data)
+        counter = 0  # to track when print next line (end=)
+
+        for y_value in x_list:  # each list has values amount len(grid_data[x_list])
+            print(' ', end='')  # ads extra spece between character in same row to match visuals with default big spaces between columns
+
+            if counter == len(x_list) - 1:
+                print(y_value)
+            else:
+                print(y_value, end='')
+
+            counter += 1
+
+
+def gen_grid(population):
+    """ Generates grid data and number of houses (each house is one grid cell)
+    built-in min() function, to find the element which has the minimum distance from the specified number.
+    min(myList, key=lambda x:abs(x-myNumber))
+    :param population: int(numberOfPopulation)
+    :return: list of lists (grid data x number of lists
+             with values y), int(numberOfHouses)
+    """
+    houses = round((population / 4 * (11 / 10 if random.randint(0, 1) == 0 else 9 / 10)))  # based on population and random factor 10%
+    # ABC are different algoritms used to calculate grid, one is picked based on how close the algorithm will match to houses
+    gridA = int(math.sqrt(houses)) * int(math.sqrt(houses))
+    gridB = int(math.sqrt(houses)) * (int(math.sqrt(houses)) + 1)
+    gridC = (int(math.sqrt(houses)) + 1) * (int(math.sqrt(houses)) + 1)
+    print(gridA, gridB, gridC)
+    print(houses)
+
+    win_algorithm = min([gridA, gridB, gridC], key=lambda x: abs(x-houses))
+    print(win_algorithm)
+    x_grid = 0
+    y_grid = 0
+    if gridA == win_algorithm:
+        x_grid = int(math.sqrt(houses))
+        y_grid = int(math.sqrt(houses))
+    elif gridB == win_algorithm:
+        x_grid = int(math.sqrt(houses))
+        y_grid = int(math.sqrt(houses)) + 1
+    elif gridC == win_algorithm:
+        x_grid = int(math.sqrt(houses)) + 1
+        y_grid = int(math.sqrt(houses)) + 1
+
+    return [['▓'] * y_grid for item in range(x_grid)], x_grid * y_grid
 
 
 def intro_game():  # Runs when user choose Intro Game
@@ -108,6 +161,7 @@ def family_gen(random_family):
     :return: [familyChar], [familyStats]
     """
     familyChar = []
+
     if not random_family:  # user defined family names
         while True:
             name = input('Type family member name or enter:  ')
@@ -116,11 +170,15 @@ def family_gen(random_family):
             elif not name and not familyChar:
                 print('Must be at least one name.')
                 continue
+            elif len(name) > 20:
+                print('Name too large. Use no more than 20 characters.')
+                continue
             else:  # minimum one name and user hit enter
                 break
+
     elif random_family:  # family size 1 - 8 , most likely  3-6 family , other ranges less likely
         k100_roll = random.randint(1, 100)
-
+        size_f = 0
         if k100_roll in range(1, 51):
             size_f = random.randint(3, 5)  # 3 or 4 or 5 family members
         elif k100_roll in range(51, 81):
