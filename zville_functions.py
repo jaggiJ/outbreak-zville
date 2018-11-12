@@ -1,5 +1,13 @@
 #! python 3
-import random, datetime, sys, math
+"""
+BSD 3-Clause License
+
+Copyright (c) 2018, jaggiJ (jagged93 <AT> gmail <DOT> com), Aleksander Zubert
+All rights reserved.
+
+Simulation of zombie attack on family.
+"""
+import random, datetime, sys, math, time  # standard library
 
 
 def draw_grid_data(grid_data):
@@ -22,6 +30,147 @@ def draw_grid_data(grid_data):
             counter += 1
 
 
+def fight(grid, zombies, population, pulped, init_pop, rounds_passed):  # grid_data, current_zombies, current_pop, pulped bodies, starting_population
+    """ counts infected tiles, amount of zombies and defenders to fight, makes them fight, adds new infected zones based on human casualties
+    # example use: grid_data, zombies, population, pulped, round_count = fight(grid=grid_data, zombies=5, population=1495, pulped=0, init_pop=1500, rounds_passed=26)
+    :param grid:
+    :param zombies:
+    :param population:
+    :param pulped:
+    :param init_pop:
+    :param rounds_passed
+    :return: updated grid, new zombies amount, new population amount, new pulped amount, new time
+    """
+
+    infected_tiles = []
+    # area_scan = [(y-1, x), (y-1,x+1), (y,x+1), (y+1,x+1), (y+1,x), (y+1,x-1), (y,x-1), (y-1,x-1) ]  # N, NE, E, SE, S, SW, W, NW
+    grid_attacked = []  # list of lists with pair of tuples each
+    healthy_tiles = 0
+    rounds_count = 1
+
+    # counting healthy, infected tiles and tiles that will be attacked this round
+    for y in range(len(grid)):
+
+        for x in range(len(grid[y])):
+
+            if grid[y][x] == '▓':  # healthy tile
+                healthy_tiles += 1
+            if grid[y][x] == '░':  # the infected tile
+
+                infected_tiles.append((y, x))
+
+                # scan around infected tile for healthy tiles, add coord of first one to grid_attacked if not already present
+                # in case of out of range make except to ignore error and keep seeking
+                # content of grid_attacked makes contact area to determine fights due for the round
+
+                for ry, rx in [(y-1, x), (y-1,x+1), (y,x+1), (y+1,x+1), (y+1,x), (y+1,x-1), (y,x-1), (y-1,x-1) ]:  # rx relative x ry relative y
+                    try:
+                        if ry >= 0 and rx >= 0 and grid[ry][rx] == '▓' and (ry, rx) not in grid_attacked:  # absolute coord must be 0+ otherwise they are out of grid
+                            grid_attacked.append((ry, rx))  # appending tuple of coords of attacked healthy tile
+                            break
+                    except IndexError:
+                        pass
+                        #print('One was out of range. Except working OK.')
+    print(f'infected tiles = {len(infected_tiles)}, {infected_tiles}')
+    print(f'healthy tiles = {healthy_tiles}')
+    print(f'healthy tiles attacked = {len(grid_attacked)}, {grid_attacked}')
+    print(f'population = {population}')
+    print(f'zombies = {zombies}')
+
+    # i want calculate fight taking amount of all zombies involved against all population involved until one side die.
+    # A. for round_fight in range(len(amount_of_zombies)
+    pop_fighting = round(population / healthy_tiles * len(grid_attacked))
+    print(f'zombies attacking = {zombies}')
+    print(f'homeowners defending = {pop_fighting}')
+
+    pile = 0  # amount of zombies pulped in one round
+    bitten = 0  # amount of bitten, each 12 rounds that turns to zombies and resets
+    bitten_to_zombie = 0
+
+    while zombies > 0 and pop_fighting > 0 or pop_fighting == 0 and bitten > 0:
+
+        #print(f'round number = {rounds_count}')
+        #print(f'zombies for round = {zombies}')
+        #print(f'defenders for round = {pop_fighting}')
+        for i in range(zombies):  #  one round, each zombie attack defender
+            #print(f'bitten ={bitten}')
+
+            if pop_fighting > 0:
+                roll = random.randint(1, 100)
+                #print(f'roll is = {roll}')
+                if roll <= 60:
+                    pass
+                    #print('one draws')
+
+                    # 40% for adding a bite when not already bitten
+                    if pop_fighting > 1 and bitten < pop_fighting and random.randint(1, 100) <= 40:
+                        # bitten = 1
+                        # fighting = 2
+                        # i = random(bitten: 1, fighting: 2)
+                        # if i > bitten then bitten += 1
+                        if random.randint(bitten, pop_fighting) > bitten:
+                            bitten += 1
+                            #print('I am bitten !')
+                            if bitten_to_zombie == 0:  # adding infection counter if not already running
+                                #print(f'first human bit, adding infection counter')
+                                bitten_to_zombie = rounds_count + 3
+
+                elif roll <= 80:  # human dies, zombie raises
+
+                    # how to find if one who died was bitten before ?
+                    # pop_fighting = 2
+                    # bitten = 1
+                    # i = random.randint(1, pop_fighting:2)
+                    # if i <= bitten then bitten -= 1
+                    if bitten == 1 and pop_fighting == 1:  # when last defender that died was already bitten
+                        bitten = 0
+                    elif bitten > 0 and pop_fighting > 1 and random.randint(1, pop_fighting) <= bitten:  # check if dead human was bitten before, to remove amount of infected
+                        bitten -= 1
+
+                    print('human dies')
+                    pop_fighting -= 1
+                    population -= 1
+                    pile -= 1  # new zombie will raise
+                else:
+                    print('zombie pulped')
+                    pulped += 1  # added to pulped bodies
+                    pile += 1  # zombie will be removed
+            elif zombies < 1:
+                print('DAMN, IMPOSSIBLE HAPPENED AND ZOMBIES LOST THE FIGHT, TELL DEV TO WRITE NEW CODE TO HANDLE THAT :D')
+            else:
+                print('=' * 79)
+                print(f'every defender killed, fight lasted {rounds_count *5} seconds')
+                print('=' * 79)
+                break
+        rounds_count += 1
+
+        # infected turn zombie
+        if rounds_count == bitten_to_zombie:
+            pile -= bitten
+            print(f'{bitten} infected humans are turning into zombies')
+            pop_fighting -= bitten
+            population -= bitten
+            bitten = 0
+            bitten_to_zombie = 0
+            # need to remove infected turned from pop_fighting
+            # need to calculate if dead human is one that was bitten
+
+        zombies -= pile  # adjusting number of zombies by pulped/raised in round
+        pile = 0  # resetting pulped pile
+
+    # updating grid with new infected tiles, each full 4 population removed adds one infected tile
+    while len(infected_tiles) < int((init_pop - population) / 4):
+        if len(grid_attacked) < 1:  # no more attacked tiles to add
+            break
+        # add random choice from attacked tiles, remove it and check again, if its empty break
+        temp_yx = random.choice(grid_attacked)  # tuple with y, x coord
+        grid_data[temp_yx[0]][temp_yx[1]] = '░'
+        grid_attacked.remove(temp_yx)
+    new_time = rounds_passed + rounds_count
+
+    return grid_data, zombies, population, pulped, new_time
+
+
 def gen_grid(population):
     """ Generates grid data and number of houses (each house is one grid cell)
     built-in min() function, to find the element which has the minimum distance from the specified number.
@@ -35,11 +184,11 @@ def gen_grid(population):
     gridA = int(math.sqrt(houses)) * int(math.sqrt(houses))
     gridB = int(math.sqrt(houses)) * (int(math.sqrt(houses)) + 1)
     gridC = (int(math.sqrt(houses)) + 1) * (int(math.sqrt(houses)) + 1)
-    print(gridA, gridB, gridC)
-    print(houses)
+    #print(gridA, gridB, gridC)
+    #print(houses)
 
     win_algorithm = min([gridA, gridB, gridC], key=lambda x: abs(x-houses))
-    print(win_algorithm)
+    #print(win_algorithm)
     x_grid = 0
     y_grid = 0
     if gridA == win_algorithm:
@@ -190,12 +339,15 @@ def family_gen(random_family):
         f_txt = open('dictio//names_female.txt')
         male_names = m_txt.read().split('\n')  # all male names list
         female_names = f_txt.read().split('\n')  # all female names list
+        bubu = ''  # exception quick fix
 
         if size_f == 2:
             if random.randint(1, 100) < 80:  # if family 2 members there is 80 % gender is opposite
                 familyChar.append(random.choice(male_names))
                 familyChar.append(random.choice(female_names))
-        else:
+            else:
+                bubu = 'xxx'  # to prevent error when size_f is 2 and >=80
+        if bubu == 'xxx' or size_f != 2:
             for index in range(size_f):
                 gender = random.choice('mf')
 
@@ -218,6 +370,57 @@ def family_gen(random_family):
 
     return familyChar, familyStats
 
+
+def fight(grid):
+
+    infected_tiles = 0
+    infected_tiles_contact = []  # list of tuples with x,y coord
+    # area_scan = [(y-1, x), (y-1,x+1), (y,x+1), (y+1,x+1), (y+1,x), (y+1,x-1), (y,x-1), (y-1,x-1) ]  # N, NE, E, SE, S, SW, W, NW
+    grid_attacked = []  # list of lists with pair of tuples each
+
+    for y in range(len(grid)):
+
+        for x in range(len(grid[y])):
+
+            if grid[y][x] == '░':  # the infected tile
+                infected_tiles += 1
+                print(f'I am infected ={(y,x)}')
+                # scan around infected tile for healthy tiles, add coord of first one to grid_attacked if not already present
+                # in case of out of range make except to ignore error and keep seeking
+                # content of grid_attacked makes contact area to determine fights due for the round
+
+                for ry, rx in [(y-1, x), (y-1,x+1), (y,x+1), (y+1,x+1), (y+1,x), (y+1,x-1), (y,x-1), (y-1,x-1) ]:  # rx relative x ry relative y
+                    #try:
+                    # how to find N of the infected tile grid[y][x] ?
+                    # i must grid[y-1][x] # how to do it ? # I cant make 8 elif with appropriate grid indices or make iterable list that somehow pick them up
+                    if ry >= 0 and rx >= 0 and grid[ry][rx] == '▓' and (ry, rx) not in grid_attacked:  # absolute coord must be 0+ otherwise they are out of grid
+                        grid_attacked.append((ry, rx))  # appending tuple of coords of attacked healthy tile
+                        break
+                    #except IndexError:
+                    #    print('One was out of range. Except working OK.')
+
+    print(f'amount of infected tiles = {infected_tiles}')
+    print(f'tiles attacked in the round = {len(grid_attacked)}')
+    print(f'we are attacked ={grid_attacked}')
+    #print()
+
+
+
+
+def speed_round(kmh, delay, round_sec):
+    """
+    Calculates speed in meters per game round
+    # How many meters zombies move in 5 sec game round at speed 1kmh ?
+    # How many meters per second is 1 kilometer per hour = 1000 in 3600 =  10m in 36s = 10/36 in 1s = 10/36*5 in 1 round = 1.38m per round(5sec)
+    # 1kmh = 1000m in 3600 seconds = 1000 in 720 game rounds = 1000/720m in 1 round = 1.38m per round(5sec)
+    # answer is = 1.38m/round, so if zombies have speed 3.22kmh their game speed is 3.22 * 1.38mpr = 4.44 meters per 5 second round
+    :param kmh: speed in kilometers per hour
+    :param delay: delay caused by some stuff eg besieging houses, kmh=1/delay
+    :param round: length of game round/iteration per second
+    :return: float (speed in meters per game iteration/round)
+    """
+    speed = (kmh * 1000 / 3600) / delay * round_sec
+    return speed
 
 def weather(daytime):
     """
