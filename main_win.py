@@ -1,11 +1,9 @@
 #! python3
 """
 BSD 3-Clause License
-
 Copyright (c) 2018, jaggiJ (jagged93 <AT> gmail <DOT> com), Aleksander Zubert
 All rights reserved.
-
-Simulation of zombie attack on family.
+Simulation of zombie virus in village.
 """
 
 import random  # Used for random k6rolls to powerAdvantage resolution
@@ -13,7 +11,7 @@ import sys  # Used to quit game on user enter input at choosing zombies number
 import time  # Used for delay between zombie hits
 from zville_functions import intro_game, user_menu_choice, village_gen, \
     family_gen, yes_or_no, weather, draw_grid_data, gen_grid, speed_round
-from zville_functions import fight
+from zville_functions import fight, family_fight, press_enter
 
 story = """A STORY. How shit hit the fun?
 An isolated village. 
@@ -26,8 +24,8 @@ A viral sample has been released.
 Somewhere in the village, patient zero has been exposed to a sample.  
 """
 
-savedFamily = []  # List of family characters from which each game run will resets family members alive
-sim_speed = 1
+savedFamily = ()  # Tuple of family characters from which each game run will resets family members alive
+sim_speed = 2
 random_village = True
 random_family = True
 village = []
@@ -45,6 +43,7 @@ print(patient_zero)
 
 while True:  # MAIN LOOP
 
+    # MAIN MENU CODE
     while True:  # Handles user menu choices before game starts
         main_choice = user_menu_choice()  # Main game menu returns integer
 
@@ -52,21 +51,30 @@ while True:  # MAIN LOOP
             intro_game(story)  # Intro story
             random_family = True
             random_village = True
-            familyChar, familyStats = family_gen(random_family)
             village = village_gen(random_village)
-            sim_speed = 2  # Speed is set slower because its probably first game
+            sim_speed = 1  # Speed is set slower because its probably first game
             break
 
         elif main_choice == 5:  # Set Sim Speed
+            print("""       sim_speed determines:
+            printing speed of  introductory scene, 
+            delay speed of main fight summaries,
+            printing speed main fight fighting, 
+            delay speed of family fight summaries,
+            printing speed of family fighting, 
+            """)
             while True:
-                sim_speed = input('Set sim speed between 0.2(slowest) to'
-                                  ' 10.0 (ultra fast). Default is 1')
-                if sim_speed.isdecimal() and float(sim_speed) < 10.1:
-                    if float(sim_speed) < 0.1:
-                        sim_speed = 1
-                    print('sim speed set =', sim_speed)
-                    sim_speed = 1/float(sim_speed)
+                try:
+                    print(' Set sim speed: '.center(50, '='))
+                    print('1 - speed controlled by pressing ENTER key(slowest,intro level speed)\n'
+                          '2 - fluid (default)\n3 - I N S A N E - guess what\'s that?')
+                    sim_speed = int(input())
+                    if sim_speed not in [1, 2, 3]:
+                        raise ValueError
+                    print(f' SPEED SET = {sim_speed} '.center(50, '+'))
                     break
+                except ValueError:
+                    print('Type an integer in range 1-3'.center(50, '='))
             continue
 
         elif main_choice == 1:  # Start Random Sim
@@ -114,9 +122,9 @@ while True:  # MAIN LOOP
         elif main_choice == 6:  # Exit Sim
             sys.exit()
 
+    # BEGINNING SCENE
     print('='*79)
-    # Do not worry. That is just a list of strings :D.
-
+    # I do it for lulz
     story = ['Village ', village[0], ' ', village[2],  # prints village name and date
              '\npopulation size ', str(village[1]), '\nIt is ', weather[0],  # prints population size and weather
              ' and ', weather[1], '. Also ', weather[2], ' and ', weather[3],
@@ -125,18 +133,20 @@ while True:  # MAIN LOOP
              random.choice(locations), '.\n', 'All of sudden ', patient_zero,
              ' falls on ground, pale like snow'
              ' and is all in tremors...\n', 'TWIST']
-    twist_a = '%s are shocked...\n%s ' \
-                   'crouches trying to help. Something terrific happens.\n' \
-                   '%s turns into a zombie and bites his benefactor.\n' \
-                   'Blood rushes forth.\n' \
-                   'There are %d zombies to brave new world...\n' \
-                   % (', '.join(intro_family), random.choice(intro_family), patient_zero, initial_wave)
-    twist_b = 'There is nobody at hand to help. After a minute someone notices ' \
-                   'lying body\n... and runs away.\nMeanwhile %s arises as a' \
-                   ' zombie and seeks for his first victim.\nThere is' \
-                   ' just this one zombie to brave new world...\n' % patient_zero
 
-    timer = 0
+    twist_a = (f'Everybody is shocked...\n{random.choice(intro_family)} crouches trying to help. '
+               f'Something terrific happens.\n{patient_zero} turns into a zombie and bites his '
+               f'benefactor.\nBlood rushes forth...spills all around facing primal hunger.\nTime '
+               f'frozen by terror. '
+               f'Veil is lifted for {initial_wave} zombies to brave new world...\n')
+
+    twist_b =  'There is nobody at hand to help. After a minute someone notices ' \
+               'lying body\n... and runs away.\nMeanwhile %s arises as a' \
+               ' zombie and seeks for his first victim.\nThere is' \
+               ' just this one zombie to brave new world...\n' % patient_zero
+
+    timer = 0.5
+
     for item in story:
         if item == 'TWIST' and len(intro_family) != 1:
             intro_family.remove(patient_zero)
@@ -149,20 +159,32 @@ while True:  # MAIN LOOP
             print(letter_item, end='')
             time.sleep(timer)
             if letter_item in '.?!+':
-                time.sleep(0)  # DEBUGGING set 0.2 for release
+                if sim_speed in [1, 2]:
+                    time.sleep(0.2)  # DEBUGGING set 0.2 for release
+                else:
+                    time.sleep(0)
                 continue
             elif letter_item in '=':
                 timer = 0
             else:
-                timer = 0  # DEBUGGING set 0.01 for release
+                if sim_speed == 1:
+                    timer = 0.08
+                elif sim_speed == 2:
+                    timer = 0.05
+                else:
+                    timer = 0
                 continue
 
+    if sim_speed == 1:
+        press_enter()
+
+    # NOW BUNCH OF VARIABLES FOR COMING SIMULATION
     #print('=' * 79)
     # print('TEST')print('TEST2') print('TEST3')  # DEBUGGING
     #fighting_instances = count_fighting_instances()  # 1 for each pair of infected-healthy tiles that touch each other
     pulped_body = 0
     grid_data, houses_number   = gen_grid(village[1])  # takes: population size, returns: grid_data (list of lists) and houses_number(integer)
-    family_house    = random.randint(1, houses_number)
+    family_custom = False  # Is family customised and saved by user ?
     incubation_time = 12                                                        # x5 seconds (one round)
     current_pop     = village[1] - initial_wave                                 # amount of population now, integer
     current_zombies = initial_wave                                              # amount of zombies now, integer
@@ -173,15 +195,34 @@ while True:  # MAIN LOOP
     wave_size       = round(current_zombies / (houses_number - houses_dead)+1)  # size of next wave that hits family
     round_count     = 1                                                         # how many 5 sec rounds passed
     timer = [0, 0]  # minutes, seconds
+    family_cache = 0  # last amount of zombies per cell attacked
 
     # how much rounds it take to move the swarm to next fight ?
     countdown_set = int(25 / zed_speed) + 1  # 25 meters to go / zombie game speed + 1 because we round up to prevent exception if 0
 
-    # choosing random grid for start of infection
+    # CHOOSING RANDOM TILES FOR PATIENT ZERO AND FAMILY HOUSE LOCATION
+    # start of infection
     temp_x = random.randint(0, len(grid_data)-1)
     grid_data[temp_x][random.randint(0, len(grid_data[temp_x])-1)] = '░'
 
-    # printing some initial info
+    # time delay after intro scene
+    if sim_speed == 1:
+        press_enter()
+    time.sleep(3) if sim_speed == 2 else time.sleep(0)
+
+    # family_home location
+    while True:  # chosen family coord cannot be infected
+        int_y = random.randint(0, len(grid_data) - 1)  # (y coord),(eg 5) represent list number in grid data
+        int_x = random.randint(0,len(grid_data[0]) - 1)  # x coord eg 0 represent value number in random list inside grid_data
+        family_coord = (int_y, int_x)  # tuple (y, x) eg (5, 0) < - list 5 value 0 of grid_data, is checked after fight and when is '░' triggers family_fight()
+        #print(f'I was chosen to be family home {grid_data[int_y][int_x]}, {family_coord}')  #DEBUGGING
+        if grid_data[int_y][int_x] != '░':  # checking if chosen coord doesn't contain infected tile
+            grid_data[int_y][int_x] = '█'  # turning grid representation to family icon if not infected tile
+            break
+
+    #print(f'family coord looks now like = {grid_data[int_y][int_x]}')  # DEBUGGING
+
+    # INITIAL DATA PRINTED OUT
     #print('pop_size =', village[1])
     #print('houses_number =', houses_number, type(houses_number))
     #print('family home number =', family_house)
@@ -197,46 +238,76 @@ while True:  # MAIN LOOP
     #print('town size =', town_size, 'square meters')
     #print('houses ravaged =', houses_dead)
     #print(f'zombie game speed = {zed_speed} meters per game round')
-    print('=' * 79)
-    draw_grid_data(grid_data)
+
+    # PRINTING GRID FOR USER FOR FIRST TIME
+    print(f' {village[0].upper()}  {village[1]} villagers '.center(79, '='))  # Prints village name and population above grid
+    draw_grid_data(grid_data)  # draws first village grid (extended ascii graphic characters), with one infected cell and the family location
     print('=' * 79)
     print('Zombies head toward first house. Victims are unsuspecting...')
-    input('Press any key to start apocalypse')
+
+    # time delay after printing grid for the first time
+    if sim_speed == 1:
+        press_enter(text='PRESS ENTER TO START APOCALYPSE')
+    time.sleep(3) if sim_speed == 2 else time.sleep(0)
 
     while True:  # main loop for virus spread, each iteration is 5 seconds real time
         # in one round there is 50 % for bite and 55% for instant death of human and 45 % for zombie kill
         # after bite human turns to zombie in incubation_time
 
         #print('iteration', round_count, ' ', timer, 'seconds')
-
-
         #print('family attacked by wave size =', wave_size)
         # print(f'houses ravaged = {houses_dead}/{houses_number}')
 
+        # FIGHT INSTANCE & FAMILY FIGHT INSTANCE INSIDE
         if countdown_set == 0:
             print('=' * 79)
             print(
-                f'siege is broken, {current_zombies} zombies swarming the living...')
+                f'siege is broken, {current_zombies} zombies attack !')
             print('=' * 79)
             time.sleep(0.5)
-            grid_data, current_zombies, current_pop, pulped_body, round_count = fight(
+
+            # MAIN FIGHT CALL fight() and its arguments
+            grid_data, current_zombies, current_pop, pulped_body, round_count, family_cache = fight(
                 grid_data, current_zombies, current_pop, pulped_body,
-                village[1], round_count)
+                village[1], round_count, sim_speed)
+
             # after each fight draw new grid data
             draw_grid_data(grid_data)
+
+            # FAMILY FIGHT SECTION STARTS
+            # after fight check if family_fight() is triggered
+            if family_custom != 'dead' and grid_data[family_coord[0]][family_coord[1]] == '░':  # checks if family alive and if family tile in infected cell, if yes triggers family_fight()
+
+                if family_custom != 'continue':  # generates random family on first family fight #fix it for custom family user choice
+                    familyChar, familyStats = family_gen(random_family)
+
+                # FAMILY_FIGHT() FUNCTION RUNS HERE !
+                family_custom, familyChar, familyStats, zombiesPulped = family_fight(family_cache, familyChar, familyStats, sim_speed)
+
+                current_zombies -= zombiesPulped  # reducing amount of zombies by those pulped by family
+                pulped_body += zombiesPulped
+                if current_zombies < 1:
+                    print('Family involvement helped to stop the apocalypse. Humans won !')
+                    sys.exit()
+            # FAMILY FIGHT SECTION ENDS
+
             # how much rounds it take to move the swarm to next fight ?
             countdown_set = int(
                 25 / zed_speed) + 1  # 25 meters to go / zombie game speed + 1 because we round up to prevent exception if 0
-            print('population of humans = {current}/{total}'.format(
+
+            print('\npopulation of humans = {current}/{total}'.format(
                 current=current_pop,
                 total=village[1]))
             print('population of zombies =', current_zombies)
-            print(f'pulped = {pulped_body}')
-            # input('press any key')
-            time.sleep(0.5)
+            print(f'pulped = {pulped_body}\n')
 
-        # print(f'countdown to next attack = {countdown_set}')
-        time.sleep(0.02)
+            # time delay at end of fight
+            if sim_speed == 1:
+                press_enter()
+            time.sleep(3) if sim_speed == 2 else time.sleep(0)
+
+        # VARIOUS
+        #print(f'countdown to next attack = {countdown_set}')
         countdown_set -= 1
 
         if current_pop < 1:
@@ -247,7 +318,10 @@ while True:  # MAIN LOOP
         if timer[1] == 60:
             timer[1] = 0
             timer[0] += 1
-        # print(f'{timer[0]}:{timer[1]} min passed')
+
+        # time delay for zombies moving
+        time.sleep(0.1) if sim_speed in [1, 2] else time.sleep(0)
+        print(f'{timer[0]}:{timer[1]} min passed')
 
     print(f'zombies wiped out the village in {timer[0]}:{timer[1]} min')
     break
