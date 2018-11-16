@@ -16,9 +16,9 @@ Hard way:
 3. Run cmd program (command line interface), navigate to directory of game and type python3 start_zville.py  
 	Example: WIN+R, cmd, d: , cd d:\games\outbreak_zville\, python start_zville.py
 	
-Easy way:  (no link for win10 yet)  
-Download zville0.2.exe for Windows10 64bit -> []()  
-Download zville0.2.exe for Windows7  32bit -> [https://ufile.io/2ielr](https://ufile.io/2ielr)  
+**Windows binary downloads:**                     
+zville0.2.exe for Windows10 64bit -> []()  
+**zville0.2.exe for Windows7  32bit** -> [https://ufile.io/2ielr](https://ufile.io/2ielr)  
 
 
 **IRC**: #zville on freenode.net -> [https://webchat.freenode.net/](https://webchat.freenode.net/?nick)
@@ -29,5 +29,3 @@ Download zville0.2.exe for Windows7  32bit -> [https://ufile.io/2ielr](https://u
 
 
 **OUTBREAK ZVILLE NEED YOUR SUPPORT** -> [https://www.patreon.com/jaggiJ](https://www.patreon.com/jaggiJ)    ![Imgur](https://i.imgur.com/S44353Z.png)
-
-
