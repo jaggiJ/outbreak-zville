@@ -24,7 +24,6 @@ A viral sample has been released.
 Somewhere in the village, patient zero has been exposed to a sample.  
 """
 
-#savedFamily = ()  # Tuple of family characters from which each game run will resets family members alive  # redundant to remove
 sim_speed = 2
 random_village = True
 random_family = True
