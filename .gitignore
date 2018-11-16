@@ -12,3 +12,6 @@ os_diffs
 
 # git webpage
 _config.yml
+
+# synch_files
+.tmp.drivedownload
