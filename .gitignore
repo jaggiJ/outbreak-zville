@@ -1,3 +1,8 @@
 # files from Pycharm
 
 .idea
+.tmp.drivedownload
+dev.py
+test.py
+test2.py
+useful_shortcuts.txt
