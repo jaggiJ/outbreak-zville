@@ -25,7 +25,7 @@ zville0.2.exe for Windows10 64bit -> []()
 
 **Wiki** -> https://github.com/jaggiJ/outbreak_zville/wiki[https://github.com/jaggiJ/outbreak_zville/wiki](https://github.com/jaggiJ/outbreak_zville/wiki)
 
-**Development** -> [https://github.com/jaggiJ/outbreak_zville/projects](https://github.com/jaggiJ/outbreak_zville/projects)  
+**Development** -> [https://github.com/jaggiJ/outbreak_zville/projects/1](https://github.com/jaggiJ/outbreak_zville/projects/1)  
 
 
 **OUTBREAK ZVILLE NEED YOUR SUPPORT** -> [https://www.patreon.com/jaggiJ](https://www.patreon.com/jaggiJ)    ![Imgur](https://i.imgur.com/S44353Z.png)
