@@ -1,9 +1,17 @@
 # files from Pycharm
-
 .idea
 .tmp.drivedownload
+# dev helpers
+useful_shortcuts.txt
+dev_goals.txt
 dev.py
 test.py
 test2.py
-useful_shortcuts.txt
+os_diffs
+
+# git webpage
 _config.yml
+
+# synch_files
+.tmp.drivedownload
+
