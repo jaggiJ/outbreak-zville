@@ -31,7 +31,7 @@ def draw_grid_data(grid_data):
             counter += 1
 
 
-def family_fight(family_cache, familyChar, familyStats, sim_speed):
+def family_fight(family_cache, familyChar, familyStats, sim_speed, population, zombies):
     """
     Only random family for now ?
     family members are not included in population
@@ -62,6 +62,8 @@ def family_fight(family_cache, familyChar, familyStats, sim_speed):
 
     # ADVERSARIES GENERATION. Their numbers and stats are generated each simulation.
     adversaryNumber = family_cache
+    if population < 1:
+        adversaryNumber = zombies
 
     # lists of zombie characters and zombie stats of those characters
     zombieChar = ['zombie' + str(i + 1) for i in range(adversaryNumber)]
@@ -210,10 +212,13 @@ def family_gen(random_family):
     familyChar = []
 
     if not random_family:  # user defined family names
+
         while True:
-            name = input('Type family member name or enter:  ')
+            name = input('Type family member name or enter to finish:  ')
             if name:
                 familyChar.append(name.title())
+                #print('I should add name')
+                #print(familyChar)
             elif not name and not familyChar:
                 print('Must be at least one name.')
                 continue
@@ -229,9 +234,9 @@ def family_gen(random_family):
 
         if k100_roll in range(1, 51):
             size_f = random.randint(3, 5)  # 3 or 4 or 5 family members
-        elif k100_roll in range(52, 81):
+        elif k100_roll in range(51, 81):
             size_f = int(random.choice('126'))  # 1 or 2 or 6 family members
-        elif k100_roll in range(82, 100):
+        elif k100_roll in range(81, 100):
             size_f = int(random.choice('78'))  # 7 or 8 family members
 
         m_txt = open('dictio//names_male.txt')
@@ -241,12 +246,15 @@ def family_gen(random_family):
         #print(f'family size = {size_f}')  # DEBUGGING
 
         while True:
-
             if size_f == 2:
                 if random.randint(1, 100) < 80:  # if family 2 members there is 80 % gender is opposite
                     familyChar.append(random.choice(male_names))
+                    #print('I should add male name')
+                    #print(familyChar)
                     familyChar.append(random.choice(female_names))
-                    print('I executed code for only 2 family with both gender opposite')
+                    #print('I should add female name')
+                    #print(familyChar)
+                    # print('I executed code for only 2 family with both gender opposite') DEBUGGING
                     break
 
             for index in range(size_f):
@@ -254,8 +262,12 @@ def family_gen(random_family):
 
                 if gender == 'm':
                     familyChar.append(random.choice(male_names))
+                    #print('I should add male name')
+                    #print(familyChar)
                 elif gender == 'f':
                     familyChar.append(random.choice(female_names))
+                    #print('I should add female name')
+                    #print(familyChar)
             break
 
         m_txt.close()
@@ -460,7 +472,7 @@ def fight(grid, zombies, population, pulped, init_pop, rounds_passed, sim_speed)
         time.sleep(0.2) if sim_speed in [1, 2] else time.sleep(0)  # delay at end of each fighting round
 
         if zombies < 1:
-            print('Zombies has been stopped. Humanity is saved')
+            print('\nZombies has been stopped. Humanity is saved')
             sys.exit()
 
     # ADDING NEW INFECTED TILES
@@ -593,6 +605,7 @@ def village_gen(random_village):
                                                                  '(y)|(n)')
                 spam = input()
                 if spam.lower() == 'y':
+                    pop_size = int(pop_size)  # must be turned to integer to prevent TypeError: '>' not supported between instances of 'int' and 'str' in gen_grid()
                     break
                 else:
                     continue
@@ -649,7 +662,7 @@ def speed_round(kmh, delay, round_sec):
     speed = (kmh * 1000 / 3600) / delay * round_sec
     return speed
 
-def weather(daytime):
+def f_weather(daytime):
     """
     Generates list of strings depicting weather depending on time of day.
     :param daytime: 'day'|'night'

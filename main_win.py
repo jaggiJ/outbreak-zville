@@ -10,7 +10,7 @@ import random  # Used for random k6rolls to powerAdvantage resolution
 import sys  # Used to quit game on user enter input at choosing zombies number
 import time  # Used for delay between zombie hits
 from zville_functions import intro_game, user_menu_choice, village_gen, \
-    family_gen, yes_or_no, weather, draw_grid_data, gen_grid, speed_round
+    family_gen, yes_or_no, f_weather, draw_grid_data, gen_grid, speed_round
 from zville_functions import fight, family_fight, press_enter
 
 story = """A STORY. How shit hit the fun?
@@ -19,27 +19,27 @@ Great place for testing stuff on human subjects, isn't it?
 Concerns about value of human life, dignity and work ethics since long had 
 their own spin-off. 
 Something happened, let's call it ... 
-LACK OF TRANSPARENCY. 
+Lack of transparency for government spending. 
 A viral sample has been released.     
 Somewhere in the village, patient zero has been exposed to a sample.  
 """
 
-savedFamily = ()  # Tuple of family characters from which each game run will resets family members alive
+#savedFamily = ()  # Tuple of family characters from which each game run will resets family members alive  # redundant to remove
 sim_speed = 2
 random_village = True
 random_family = True
 village = []
 familyChar = []
 familyStats = []
-weather = weather('day')
+weather = f_weather('day')
 locations = ['walking in a park', 'packing stuff into a car\'s trunk',
              'watching a big TV in a saloon', 'playing a game of cards',
              'quarreling passionately']
 intro_family, spam = family_gen(True)  # random names for game story family spam is to hold trash overflow data returned by function
 initial_wave = len(intro_family)
-print(intro_family)
+# print(intro_family) DEBUGGING
 patient_zero = random.choice(intro_family)
-print(patient_zero)
+# print(patient_zero) DEBUGGING
 
 while True:  # MAIN LOOP
 
@@ -88,27 +88,30 @@ while True:  # MAIN LOOP
             # or village are designed by user and asks for confirmation
 
             if not random_family and not random_village:
-                print('Family: ' + ''.join(familyChar), '\n', village[:-1], 'sim'
+                print('Family: ' + ' '.join(familyChar), '\nvillage is: ', village[0], village[1], 'sim'
                       ' speed =', sim_speed)
             elif not random_family and random_village:
-                print('Family: ' + ' '.join(familyChar), '\nVillage name and '
-                                                         'size '
-                      'will be random and sim speed =', sim_speed)
+                print('Family: ' + ' '.join(familyChar), '\nVillage name and size will be random and sim speed =', sim_speed)
+                village = village_gen(random_village)  # case where only village is random, if not generated here causes IndexError: list index out of range at introduction
+
             elif random_family and not random_village:
-                print('Village: '+' '.join(village[:-1]), '\nFamily members '
-                      'will be random and sim speed =', sim_speed)
+                print('Village: ', village[0], village[1], '\nFamily members will be random and sim speed =', sim_speed)
+                familyChar, familyStats = family_gen(random_family)
             else:
                 print('Nothing designed yet.')
                 continue
 
             if yes_or_no('Do you want to start game with those'
                          ' settings?') == 'no':
+                print('\nSetting village and family to random.') # when user not satisfied with designed settings family and village are reset to random
+                random_family = True
+                familyChar = []
+                familyStats = []
+                random_village = True
+                village = []
                 continue
             else:
-                print('Setting village and family to random.')
-                random_family = True
-                random_village = True
-                break
+                break  # in case user accept custom settings game starts with them
 
         elif main_choice == 3:  # Design Village
             random_village = False
@@ -264,7 +267,6 @@ while True:  # MAIN LOOP
             print(
                 f'siege is broken, {current_zombies} zombies attack !')
             print('=' * 79)
-            time.sleep(0.5)
 
             # MAIN FIGHT CALL fight() and its arguments
             grid_data, current_zombies, current_pop, pulped_body, round_count, family_cache = fight(
@@ -278,11 +280,8 @@ while True:  # MAIN LOOP
             # after fight check if family_fight() is triggered
             if family_custom != 'dead' and grid_data[family_coord[0]][family_coord[1]] == '░':  # checks if family alive and if family tile in infected cell, if yes triggers family_fight()
 
-                if family_custom != 'continue':  # generates random family on first family fight #fix it for custom family user choice
-                    familyChar, familyStats = family_gen(random_family)
-
                 # FAMILY_FIGHT() FUNCTION RUNS HERE !
-                family_custom, familyChar, familyStats, zombiesPulped = family_fight(family_cache, familyChar, familyStats, sim_speed)
+                family_custom, familyChar, familyStats, zombiesPulped = family_fight(family_cache, familyChar, familyStats, sim_speed, current_pop, current_zombies)
 
                 current_zombies -= zombiesPulped  # reducing amount of zombies by those pulped by family
                 pulped_body += zombiesPulped
@@ -324,6 +323,28 @@ while True:  # MAIN LOOP
         print(f'{timer[0]}:{timer[1]} min passed')
 
     print(f'zombies wiped out the village in {timer[0]}:{timer[1]} min')
-    break
+
+    # PLAY AGAIN ?
+    answer = yes_or_no('Do you want to play again ?')
+    if answer == 'no':
+        print(' ZOMBIES '.center(80, '+'), '\n')
+        time.sleep(1)
+        print(' S A Y '.center(80), '\n')
+        time.sleep(1)
+        print(' - T H A N K  Y O U - '.center(80, '$'))
+        time.sleep(1)
+        break
+    else:  # user choose new game, resetting values
+        sim_speed = 2
+        random_village = True
+        random_family = True
+        village = []
+        familyChar = []
+        familyStats = []
+        weather = f_weather('day')
+        intro_family, spam = family_gen(True)
+        initial_wave = len(intro_family)
+        patient_zero = random.choice(intro_family)
+
 
 
