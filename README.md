@@ -23,7 +23,7 @@ zville0.2.exe for Windows10 64bit -> []()
 
 **IRC**: #zville on freenode.net -> [https://webchat.freenode.net/](https://webchat.freenode.net/?nick)
 
-**Wiki** -> https://github.com/jaggiJ/outbreak_zville/wiki[https://github.com/jaggiJ/outbreak_zville/wiki](https://github.com/jaggiJ/outbreak_zville/wiki)
+**Wiki** -> [https://github.com/jaggiJ/outbreak_zville/wiki](https://github.com/jaggiJ/outbreak_zville/wiki)
 
 **Development** -> [https://github.com/jaggiJ/outbreak_zville/projects/1](https://github.com/jaggiJ/outbreak_zville/projects/1)  
 
