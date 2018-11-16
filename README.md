@@ -7,11 +7,13 @@ It runs in command line interface, has basic ascii graphic and is written in pro
 
 INSTALLATION INSTRUCTIONS FOR WINDOWS:  
 
-Hard way:
+Hard way:  
 
-1. Download and install newest version of python, if you have version lower than 3.6 - update it.  
+
+1. Download and unzip outbreak_zville release v0.2     ![Imgur](https://i.imgur.com/31nPMsB.png)
+2. Download and install newest version of python, if you have version lower than 3.6 - update it.  
 	[Download: Python 3.7.1](https://www.python.org/downloads/)
-2. Run cmd program (command line interface), navigate to directory of game and type python3 start_zville.py  
+3. Run cmd program (command line interface), navigate to directory of game and type python3 start_zville.py  
 	Example: WIN+R, cmd, d: , cd d:\games\outbreak_zville\, python start_zville.py
 	
 Easy way:  (NOT WORKING, YET)  
