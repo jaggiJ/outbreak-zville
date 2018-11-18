@@ -51,6 +51,7 @@ while True:  # MAIN LOOP
             random_family = True
             random_village = True
             village = village_gen(random_village)
+            familyChar, familyStats = family_gen(random_family)
             sim_speed = 1  # Speed is set slower because its probably first game
             break
 
@@ -127,29 +128,28 @@ while True:  # MAIN LOOP
     # BEGINNING SCENE
     print('='*79)
     # I do it for lulz
-    story = ['Village ', village[0], ' ', village[2],  # prints village name and date
-             '\npopulation size ', str(village[1]), '\nIt is ', weather[0],  # prints population size and weather
-             ' and ', weather[1], '. Also ', weather[2], ' and ', weather[3],
-             '.\n+', '='*77, '+\n', 'There ', 'is ' if len(intro_family) == 1  # separating == line and random family names doing random thing
-             else 'are ', ', '.join(intro_family), ' ',
-             random.choice(locations), '.\n', 'All of sudden ', patient_zero,
-             ' falls on ground, pale like snow'
-             ' and is all in tremors...\n', 'TWIST']
+    story2 = ['Village ', village[0], ' ', village[2],  # prints village name and date
+              '\npopulation size ', str(village[1]), '\nIt is ', weather[0],  # prints population size and weather
+              ' and ', weather[1], '. Also ', weather[2], ' and ', weather[3],
+              '.\n+', '='*77, '+\n', 'There ', 'is ' if len(intro_family) == 1  # separating == line and random family names doing random thing
+              else 'are ', ', '.join(intro_family), ' ',
+              random.choice(locations), '.\n', 'All of sudden ', patient_zero,
+              ' falls on ground, pale like snow'
+              ' and is all in tremors...\n', 'TWIST']
 
-    twist_a = (f'Everybody is shocked...\n{random.choice(intro_family)} crouches trying to help. '
+    twist_a = (f'Everybody are shocked...\n{random.choice(intro_family)} crouches trying to help. '
                f'Something terrific happens.\n{patient_zero} turns into a zombie and bites his '
-               f'benefactor.\nBlood rushes forth...spills all around facing primal hunger.\nTime '
-               f'frozen by terror. '
-               f'Veil is lifted for {initial_wave} zombies to brave new world...\n')
+               f'benefactor.\nBlood rushes forth...\n'               
+               f'There are {initial_wave} zombies to brave new world...\n\n')
 
     twist_b =  'There is nobody at hand to help. After a minute someone notices ' \
                'lying body\n... and runs away.\nMeanwhile %s arises as a' \
                ' zombie and seeks for his first victim.\nThere is' \
-               ' just this one zombie to brave new world...\n' % patient_zero
+               ' just this one zombie to brave new world...\n\n' % patient_zero
 
-    timer = 0.5
+    timer = 0
 
-    for item in story:
+    for item in story2:
         if item == 'TWIST' and len(intro_family) != 1:
             intro_family.remove(patient_zero)
             item = twist_a
@@ -160,9 +160,9 @@ while True:  # MAIN LOOP
         for letter_item in item:
             print(letter_item, end='')
             time.sleep(timer)
-            if letter_item in '.?!+':
+            if letter_item == '\n':  # because windows command line doesn't print by letter break will be every newline instead #''.?!+':
                 if sim_speed in [1, 2]:
-                    time.sleep(0.2)  # DEBUGGING set 0.2 for release
+                    time.sleep(1)  # set 1 for release if windows command line
                 else:
                     time.sleep(0)
                 continue
@@ -170,15 +170,16 @@ while True:  # MAIN LOOP
                 timer = 0
             else:
                 if sim_speed == 1:
-                    timer = 0.08
+                    timer = 0.01  # set 0 for DEBUGGING and 0.01 RELEASE
                 elif sim_speed == 2:
-                    timer = 0.05
+                    timer = 0.01  # set 0 for DEBUGGING and 0.01 RELEASE
                 else:
                     timer = 0
                 continue
 
-    if sim_speed == 1:
-        press_enter()
+
+    # time delay after intro scene
+    press_enter() if sim_speed in [1, 2] else time.sleep(0)
 
     # NOW BUNCH OF VARIABLES FOR COMING SIMULATION
     #print('=' * 79)
@@ -207,11 +208,6 @@ while True:  # MAIN LOOP
     temp_x = random.randint(0, len(grid_data)-1)
     grid_data[temp_x][random.randint(0, len(grid_data[temp_x])-1)] = '░'
 
-    # time delay after intro scene
-    if sim_speed == 1:
-        press_enter()
-    time.sleep(3) if sim_speed == 2 else time.sleep(0)
-
     # family_home location
     while True:  # chosen family coord cannot be infected
         int_y = random.randint(0, len(grid_data) - 1)  # (y coord),(eg 5) represent list number in grid data
@@ -233,8 +229,7 @@ while True:  # MAIN LOOP
 
     print('=' * 79)
     print('zombie speed =', zed_speed_kmh, 'kmh')
-    print('population of humans = {current}/{total}'.format(current=current_pop,
-                                                            total=village[1]))
+    print(f'population of humans = {current_pop}')
     print('virus incubation time = 60 seconds')
     #print('population of zombies =', current_zombies)  # redundancy with in fight() print
     #print('town size =', town_size, 'square meters')
@@ -245,12 +240,13 @@ while True:  # MAIN LOOP
     print(f' {village[0].upper()}  {village[1]} villagers '.center(79, '='))  # Prints village name and population above grid
     draw_grid_data(grid_data)  # draws first village grid (extended ascii graphic characters), with one infected cell and the family location
     print('=' * 79)
-    print('Zombies head toward first house. Victims are unsuspecting...')
+    print('Zombies head toward first house. Victims are unsuspecting...\n')
 
     # time delay after printing grid for the first time
-    if sim_speed == 1:
+    if sim_speed in [1, 2]:
         press_enter(text='PRESS ENTER TO START APOCALYPSE')
-    time.sleep(3) if sim_speed == 2 else time.sleep(0)
+    else:
+        time.sleep(0)
 
     while True:  # main loop for virus spread, each iteration is 5 seconds real time
         # in one round there is 50 % for bite and 55% for instant death of human and 45 % for zombie kill
@@ -293,16 +289,13 @@ while True:  # MAIN LOOP
             countdown_set = int(
                 25 / zed_speed) + 1  # 25 meters to go / zombie game speed + 1 because we round up to prevent exception if 0
 
-            print('\npopulation of humans = {current}/{total}'.format(
-                current=current_pop,
-                total=village[1]))
-            print('population of zombies =', current_zombies)
-            print(f'pulped = {pulped_body}\n')
+            print(f'\npopulation of humans  = {current_pop}')
+            print(f'population of zombies = {current_zombies}     pulped bodies = {pulped_body}\n')
 
             # time delay at end of fight
             if sim_speed == 1:
                 press_enter()
-            time.sleep(3) if sim_speed == 2 else time.sleep(0)
+            time.sleep(4) if sim_speed == 2 else time.sleep(0)
 
         # VARIOUS
         #print(f'countdown to next attack = {countdown_set}')
@@ -318,7 +311,7 @@ while True:  # MAIN LOOP
             timer[0] += 1
 
         # time delay for zombies moving
-        time.sleep(0.1) if sim_speed in [1, 2] else time.sleep(0)
+        time.sleep(0.05) if sim_speed in [1, 2] else time.sleep(0)
         print(f'{timer[0]}:{timer[1]} min passed')
 
     print(f'zombies wiped out the village in {timer[0]}:{timer[1]} min')

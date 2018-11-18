@@ -302,6 +302,8 @@ def fight(grid, zombies, population, pulped, init_pop, rounds_passed, sim_speed)
     :param rounds_passed will be concatenated with rounds_count and returned as new_time
     :return: updated grid, new zombies amount, new population amount, new pulped amount, new time
     """
+    zombies_start_amount = zombies  # for tracking zombie&human casualties for printing out
+    humans_start_amount = population
 
     # healthy_tiles, infected_tiles coord, grid_attacked coord
 
@@ -349,7 +351,6 @@ def fight(grid, zombies, population, pulped, init_pop, rounds_passed, sim_speed)
         #print(f'one less cell will be attacked due to insufficient amount of zeds')  # DEBUGGING
         zombies_needed_for_siege -= 3
         #print(f'zombies needed for siege = {zombies_needed_for_siege}')  # DEBUGGING
-    print(f'Homes affected = {len(grid_attacked)}')
 
     # HOW MANY ZOMBIES ATTACKED SINGLE CELL - needed as argument for family_fight(), that many zombies will attack the family
     family_cache = round(zombies / len(grid_attacked))  # average number of zombies per attacked cell
@@ -381,7 +382,10 @@ def fight(grid, zombies, population, pulped, init_pop, rounds_passed, sim_speed)
         print('last stand, every villager turns into defender')
         pop_fighting = population
 
-    print(f'Defenders = {pop_fighting}')  # DEBUGGING
+    print(f'                 {pop_fighting} defenders       {len(grid_attacked)} homes affected')  # 17 spaces to match "siege is broken, "
+    print('=' * 79)
+    if sim_speed in [1, 2]:
+        time.sleep(3)
 
     # MAIN FIGHT
     pile = 0  # amount of zombies pulped in one round
@@ -438,15 +442,15 @@ def fight(grid, zombies, population, pulped, init_pop, rounds_passed, sim_speed)
                     elif bitten > 0 and pop_fighting > 1 and random.randint(1, pop_fighting) <= bitten:  # check if dead human was bitten before, to remove amount of infected
                         bitten -= 1
 
-                    print('human dies ', end='')
-                    time.sleep(0.05) if sim_speed in [1, 2] else time.sleep(0)
+                    print('human dies ', end='\n')
+                    time.sleep(0.01) if sim_speed in [1, 2] else time.sleep(0)
                     pop_fighting -= 1
                     population -= 1
                     pile -= 1  # new zombie will raise
 
                 else:  # roll 86 - 100 zombie pulped
-                    print('zombie pulped ', end='')
-                    time.sleep(0.05) if sim_speed in [1, 2] else time.sleep(0)
+                    print('zombie pulped ', end='\n')
+                    time.sleep(0.01) if sim_speed in [1, 2] else time.sleep(0)
 
                     pulped += 1  # added to pulped bodies
                     pile += 1  # zombie will be removed
@@ -504,14 +508,16 @@ def fight(grid, zombies, population, pulped, init_pop, rounds_passed, sim_speed)
             break
 
     print('\n' + '=' * 79)
-    print(f'Zombies seized {infected_added_this_fight} homes in {rounds_count *5} seconds.')  # DEBUGGING
+    print(f'Homes seized = {infected_added_this_fight}  Time = {rounds_count *5}s   '
+          f'Zombie increase = {(zombies_start_amount - zombies) * -1}   '
+          f'Human dead = {humans_start_amount - population}')
     print('=' * 79)
     new_time = rounds_passed + rounds_count
 
     # time delay at end of fight
     if sim_speed == 1:
         press_enter()
-    time.sleep(1) if sim_speed == 2 else time.sleep(0)  # delay at end of each fighting round
+    time.sleep(4) if sim_speed == 2 else time.sleep(0)  # delay at end of each fighting round
 
     return grid, zombies, population, pulped, new_time, family_cache
 

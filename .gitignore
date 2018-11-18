@@ -1,6 +1,7 @@
 # files from Pycharm
 .idea
 .tmp.drivedownload
+
 # dev helpers
 useful_shortcuts.txt
 dev_goals.txt
@@ -14,4 +15,7 @@ _config.yml
 
 # synch_files
 .tmp.drivedownload
+
+# other
+__pycache__
 
