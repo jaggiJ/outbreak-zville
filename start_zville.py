@@ -13,7 +13,7 @@ from zville_functions import intro_game, user_menu_choice, village_gen, \
     family_gen, yes_or_no, f_weather, draw_grid_data, gen_grid, speed_round
 from zville_functions import fight, family_fight, press_enter
 
-story = """A STORY. How shit hit the fun?
+story = """How shit hit the fun?
 An isolated village. 
 Great place for testing stuff on human subjects, isn't it?    
 Concerns about value of human life, dignity and work ethics since long had 
@@ -66,8 +66,8 @@ while True:  # MAIN LOOP
             while True:
                 try:
                     print(' Set sim speed: '.center(50, '='))
-                    print('1 - speed controlled by pressing ENTER key(slowest,intro level speed)\n'
-                          '2 - fluid (default)\n3 - I N S A N E - guess what\'s that?')
+                    print('\n1 - controlled by user pressing or holding enter key\n\n'
+                          '2 - controlled by time intervals (default speed)\n\n3 - instant simulation running to the end')
                     sim_speed = int(input())
                     if sim_speed not in [1, 2, 3]:
                         raise ValueError
@@ -78,7 +78,7 @@ while True:  # MAIN LOOP
             continue
 
         elif main_choice == 1:  # Start Random Sim
-            random_family = True  # Not implemented
+            random_family = True
             random_village = True
             familyChar, familyStats = family_gen(random_family)
             village = village_gen(random_village)
@@ -127,7 +127,8 @@ while True:  # MAIN LOOP
 
     # BEGINNING SCENE
     print('='*79)
-    # I do it for lulz
+
+    # LULZ. I did it for lulz
     story2 = ['Village ', village[0], ' ', village[2],  # prints village name and date
               '\npopulation size ', str(village[1]), '\nIt is ', weather[0],  # prints population size and weather
               ' and ', weather[1], '. Also ', weather[2], ' and ', weather[3],
@@ -138,9 +139,9 @@ while True:  # MAIN LOOP
               ' and is all in tremors...\n', 'TWIST']
 
     twist_a = (f'Everybody are shocked...\n{random.choice(intro_family)} crouches trying to help. '
-               f'Something terrific happens.\n{patient_zero} turns into a zombie and bites his '
-               f'benefactor.\nBlood rushes forth...\n'               
-               f'There are {initial_wave} zombies to brave new world...\n\n')
+               f'Something terrific happens.\n{patient_zero} turns into a zombie and attacks '
+               f'the living.\nBlood rushes forth...\n'               
+               f'Soon there are {initial_wave} zombies to brave new world...\n\n')
 
     twist_b =  'There is nobody at hand to help. After a minute someone notices ' \
                'lying body\n... and runs away.\nMeanwhile %s arises as a' \
@@ -148,7 +149,6 @@ while True:  # MAIN LOOP
                ' just this one zombie to brave new world...\n\n' % patient_zero
 
     timer = 0
-
     for item in story2:
         if item == 'TWIST' and len(intro_family) != 1:
             intro_family.remove(patient_zero)
@@ -242,6 +242,14 @@ while True:  # MAIN LOOP
     print('=' * 79)
     print('Zombies head toward first house. Victims are unsuspecting...\n')
 
+    # intro game explanation of family cell
+    if main_choice == 0:
+        print('=' * 79)
+        print('On village map grid there is one most bright cell. When infection zone reaches that '
+              'spot, family fight is triggered. One family is chosen as example, to represent '
+              'simulation in more personal and detailed way.')
+        print('=' * 79)
+
     # time delay after printing grid for the first time
     if sim_speed in [1, 2]:
         press_enter(text='PRESS ENTER TO START APOCALYPSE')
@@ -314,7 +322,9 @@ while True:  # MAIN LOOP
         time.sleep(0.05) if sim_speed in [1, 2] else time.sleep(0)
         print(f'{timer[0]}:{timer[1]} min passed')
 
-    print(f'zombies wiped out the village in {timer[0]}:{timer[1]} min')
+    print(f'The village has been wiped out in {timer[0]}:{timer[1]} min')
+    print('Zombies are crawling among smoldering ruins of {village[0]}.')
+    print(f'There are still {pulped_body} pulped corpses left for eating.')
 
     # PLAY AGAIN ?
     answer = yes_or_no('Do you want to play again ?')
@@ -327,7 +337,8 @@ while True:  # MAIN LOOP
         time.sleep(1)
         break
     else:  # user choose new game, resetting values
-        sim_speed = 2
+        if sim_speed == 1:  # intro game speed will change to default, other speeds won't change
+            sim_speed = 2
         random_village = True
         random_family = True
         village = []

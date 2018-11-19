@@ -52,8 +52,8 @@ def family_fight(family_cache, familyChar, familyStats, sim_speed, population, z
     print('=' * 78)
 
     # time delay
-    if sim_speed == 1:
-        press_enter()
+    #if sim_speed == 1:  # I think its redundant and causes double press enter
+    #    press_enter()
     time.sleep(2) if sim_speed == 2 else time.sleep(0)  # delay at end of each fighting round
 
     roundNumber = 1  # starting round counter value
@@ -77,6 +77,7 @@ def family_fight(family_cache, familyChar, familyStats, sim_speed, population, z
 
         # time delay at end of fight
         if sim_speed == 1:
+            print('\n')
             press_enter()
         time.sleep(2) if sim_speed == 2 else time.sleep(0)  # delay at end of each fighting round
 
@@ -236,7 +237,7 @@ def family_gen(random_family):
             size_f = random.randint(3, 5)  # 3 or 4 or 5 family members
         elif k100_roll in range(51, 81):
             size_f = int(random.choice('126'))  # 1 or 2 or 6 family members
-        elif k100_roll in range(81, 100):
+        elif k100_roll in range(81, 101):
             size_f = int(random.choice('78'))  # 7 or 8 family members
 
         m_txt = open('dictio//names_male.txt')
@@ -384,7 +385,7 @@ def fight(grid, zombies, population, pulped, init_pop, rounds_passed, sim_speed)
 
     print(f'                 {pop_fighting} defenders       {len(grid_attacked)} homes affected')  # 17 spaces to match "siege is broken, "
     print('=' * 79)
-    if sim_speed in [1, 2]:
+    if sim_speed in [2]:
         time.sleep(3)
 
     # MAIN FIGHT
@@ -568,11 +569,11 @@ def intro_game(story):  # Runs when user choose Intro Game
     for item in story:
         print(item, end='', sep='')
         if item in '.?!':
-            time.sleep(1)  # DEBUGGING change for 1 for release
+            time.sleep(0.5)  # DEBUGGING change for 1 for release
             continue
         time.sleep(0.03)  # DEBUGGING temporary ultra speed , change for 0.03 for release
     print('=' * 79)
-
+    time.sleep(2)
 
 def press_enter(text='PRESS ENTER'):
     """ Prints PRESS ENTER repeatedly until user presses enter, then breaks from loop
@@ -594,9 +595,8 @@ def village_gen(random_village):
 
             try:
                 village_name, pop_size = input(
-                    'Enter village name and population size '
-                    'between 200 and 2500 eg. Yeovil '
-                    '1500').split()
+                    '\nEnter village name and population size '
+                    'between 200 and 2500\nfor example: Yeovil 1500\n').split()
                 if not pop_size.isdecimal():
                     print('Wrong format for population size. Enter integer.')
                     continue
@@ -604,7 +604,7 @@ def village_gen(random_village):
                     continue
 
             except:
-                print('Something went wrong')
+                print('Something went wrong. Try again.')
             else:
                 print('Your choice is ', village_name, pop_size, 'Is that '
                                                                  'correct? '
