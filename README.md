@@ -5,7 +5,7 @@ It runs in command line interface, has basic ascii graphic and is written in pro
 
 ![Imgur](https://i.imgur.com/d5SR4Qv.png)
 
-**INSTALLATION INSTRUCTIONS FOR WINDOWS:  **
+#### INSTALLATION INSTRUCTIONS FOR WINDOWS:
 
 1. Download and install newest version of python, if you have version lower than 3.6 - you need update.  
 	Download: Python 3.7.1 -> [https://www.python.org/downloads/](https://www.python.org/downloads/)
