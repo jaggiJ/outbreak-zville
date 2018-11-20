@@ -7,22 +7,20 @@ It runs in command line interface, has basic ascii graphic and is written in pro
 
 **INSTALLATION INSTRUCTIONS FOR WINDOWS:  **
 
-1. Download and unzip outbreak_zville release v0.2     ![Imgur](https://i.imgur.com/31nPMsB.png)
-2. Download and install newest version of python, if you have version lower than 3.6 - update it.  
+1. Download and install newest version of python, if you have version lower than 3.6 - you need update.  
 	Download: Python 3.7.1 -> [https://www.python.org/downloads/](https://www.python.org/downloads/)
-3. Double click on start_zville.py and the simulation should run. In case of problems run cmd program (command line interface), 	navigate to directory of game and type ```python3 start_zville.py```
-	Example: WIN+R, cmd, ```d: ,cd d:\games\outbreak_zville\, python start_zville.py```
-	
-**Windows binary downloads:**                     
-zville0.2.exe for Windows10 64bit -> []()  
-**zville0.2.exe for Windows7  32bit** -> [https://ufile.io/2ielr](https://ufile.io/2ielr)  
-
+	Standard installation is OK.
+2. Download and unzip outbreak_zville from this website (big, green 'Clone or download' button).
+3. Double click on start_zville.py and the simulation should run.  
+Problems with running game ? Report here -> [Installation issues](https://github.com/jaggiJ/outbreak_zville/issues/9)  
+or email me jagged93@gmail.com
 
 **IRC**: #zville on freenode.net -> [https://webchat.freenode.net/](https://webchat.freenode.net/?nick)
 
 **Wiki** -> [https://github.com/jaggiJ/outbreak_zville/wiki](https://github.com/jaggiJ/outbreak_zville/wiki)
 
-**Development** -> [https://github.com/jaggiJ/outbreak_zville/projects/1](https://github.com/jaggiJ/outbreak_zville/projects/1)  
+**Contributing** -> [https://github.com/jaggiJ/outbreak_zville/issues/8](https://github.com/jaggiJ/outbreak_zville/issues/8)
 
+**Development** -> [https://github.com/jaggiJ/outbreak_zville/projects/1](https://github.com/jaggiJ/outbreak_zville/projects/1)  
 
 **OUTBREAK ZVILLE NEED YOUR SUPPORT** -> [https://www.patreon.com/zville](https://www.patreon.com/zville)    ![Imgur](https://i.imgur.com/S44353Z.png)
