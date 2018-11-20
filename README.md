@@ -23,4 +23,4 @@ or email me jagged93@gmail.com
 
 **Development** -> [https://github.com/jaggiJ/outbreak_zville/projects/1](https://github.com/jaggiJ/outbreak_zville/projects/1)  
 
-**OUTBREAK ZVILLE NEED YOUR SUPPORT** -> [https://www.patreon.com/zville](https://www.patreon.com/zville)    ![Imgur](https://i.imgur.com/S44353Z.png)
+**SUPPORT ZOMBIE$ OUTBREAK** -> [https://www.patreon.com/zville](https://www.patreon.com/zville)    ![Imgur](https://i.imgur.com/S44353Z.png)
