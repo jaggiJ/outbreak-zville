@@ -1,4 +1,5 @@
 #! python3
+
 """
 BSD 3-Clause License
 Copyright (c) 2018, jaggiJ (jagged93 <AT> gmail <DOT> com), Aleksander Zubert
@@ -9,32 +10,20 @@ Simulation of zombie virus in village.
 import random  # Used for random k6rolls to powerAdvantage resolution
 import sys  # Used to quit game on user enter input at choosing zombies number
 import time  # Used for delay between zombie hits
-from zville_functions import intro_game, user_menu_choice, village_gen, \
-    family_gen, yes_or_no, f_weather, draw_grid_data, gen_grid, speed_round
-from zville_functions import fight, family_fight, press_enter
-
-story = """How shit hit the fun?
-An isolated village. 
-Great place for testing stuff on human subjects, isn't it?    
-Concerns about value of human life, dignity and work ethics since long had 
-their own spin-off. 
-Something happened, let's call it ... 
-Lack of transparency for government spending. 
-A viral sample has been released.     
-Somewhere in the village, patient zero has been exposed to a sample.  
-"""
+import zville
+import data
 
 sim_speed = 2
 random_village = True
 random_family = True
-village = []
+village_name = ''
+village_pop = 0
+real_time = None
 familyChar = []
 familyStats = []
-weather = f_weather('day')
-locations = ['walking in a park', 'packing stuff into a car\'s trunk',
-             'watching a big TV in a saloon', 'playing a game of cards',
-             'quarreling passionately']
-intro_family, spam = family_gen(True)  # random names for game story family spam is to hold trash overflow data returned by function
+#weather = zville.f_weather('day')
+
+intro_family, spam = zville.family_gen(True)  # random names for game story family spam is to hold trash overflow data returned by function
 initial_wave = len(intro_family)
 # print(intro_family) DEBUGGING
 patient_zero = random.choice(intro_family)
@@ -44,25 +33,18 @@ while True:  # MAIN LOOP
 
     # MAIN MENU CODE
     while True:  # Handles user menu choices before game starts
-        main_choice = user_menu_choice()  # Main game menu returns integer
+        main_choice = zville.user_menu_choice()  # Main game menu returns integer
 
         if main_choice == 0:  # Intro game
-            intro_game(story)  # Intro story
+            zville.intro_game(data.story)  # Intro story
             random_family = True
             random_village = True
-            village = village_gen(random_village)
-            familyChar, familyStats = family_gen(random_family)
+            village_name, village_pop, real_time = zville.village_gen(random_village)
+            familyChar, familyStats = zville.family_gen(random_family)
             sim_speed = 1  # Speed is set slower because its probably first game
             break
 
         elif main_choice == 5:  # Set Sim Speed
-            print("""       sim_speed determines:
-            printing speed of  introductory scene, 
-            delay speed of main fight summaries,
-            printing speed main fight fighting, 
-            delay speed of family fight summaries,
-            printing speed of family fighting, 
-            """)
             while True:
                 try:
                     print(' Set sim speed: '.center(50, '='))
@@ -80,46 +62,46 @@ while True:  # MAIN LOOP
         elif main_choice == 1:  # Start Random Sim
             random_family = True
             random_village = True
-            familyChar, familyStats = family_gen(random_family)
-            village = village_gen(random_village)
+            familyChar, familyStats = zville.family_gen(random_family)
+            village_name, village_pop, real_time = zville.village_gen(random_village)
             break
 
         elif main_choice == 2:  # Start Designed Sim, make checks whether family
             # or village are designed by user and asks for confirmation
 
             if not random_family and not random_village:
-                print('Family: ' + ' '.join(familyChar), '\nvillage is: ', village[0], village[1], 'sim'
+                print('Family: ' + ' '.join(familyChar), '\nvillage is: ', village_name, village_pop, 'sim'
                       ' speed =', sim_speed)
             elif not random_family and random_village:
                 print('Family: ' + ' '.join(familyChar), '\nVillage name and size will be random and sim speed =', sim_speed)
-                village = village_gen(random_village)  # case where only village is random, if not generated here causes IndexError: list index out of range at introduction
+                village_name, village_pop, real_time = zville.village_gen(random_village)  # case where only village is random, if not generated here causes IndexError: list index out of range at introduction
 
             elif random_family and not random_village:
-                print('Village: ', village[0], village[1], '\nFamily members will be random and sim speed =', sim_speed)
-                familyChar, familyStats = family_gen(random_family)
+                print('Village: ', village_name, village_pop, '\nFamily members will be random and sim speed =', sim_speed)
+                familyChar, familyStats = zville.family_gen(random_family)
             else:
                 print('Nothing designed yet.')
                 continue
 
-            if yes_or_no('Do you want to start game with those'
+            if zville.yes_or_no('Do you want to start game with those'
                          ' settings?') == 'no':
                 print('\nSetting village and family to random.') # when user not satisfied with designed settings family and village are reset to random
                 random_family = True
                 familyChar = []
                 familyStats = []
                 random_village = True
-                village = []
+                village_name, village_pop, real_time = None, None, None
                 continue
             else:
                 break  # in case user accept custom settings game starts with them
 
         elif main_choice == 3:  # Design Village
             random_village = False
-            village = village_gen(random_village)
+            village_name, village_pop, real_time = zville.village_gen(random_village)
             continue
         elif main_choice == 4:  # Design Family
             random_family = False
-            familyChar, familyStats = family_gen(random_family)
+            familyChar, familyStats = zville.family_gen(random_family)
             continue
 
         elif main_choice == 6:  # Exit Sim
@@ -127,74 +109,64 @@ while True:  # MAIN LOOP
 
     # BEGINNING SCENE
     print('='*79)
+    story2 = (
+        'Village {Yeovil}  {date_time}\npopulation size {p1530}\n{r_weather}\nThere {are}'
+        '{John_and_Mark}\n...{doing_shopping}.\nAll of sudden {patient_zero} falls on the '
+        'ground, pale like snow and is all in tremors...\n').format\
+        (Yeovil=village_name, date_time=real_time, p1530=str(village_pop),
+         r_weather=zville.f_weather('day'), are='is ' if len(intro_family) == 1 else 'are ',
+         John_and_Mark=', '.join(intro_family), doing_shopping=random.choice(data.LOCATIONS),
+         patient_zero=patient_zero)
 
-    # LULZ. I did it for lulz
-    story2 = ['Village ', village[0], ' ', village[2],  # prints village name and date
-              '\npopulation size ', str(village[1]), '\nIt is ', weather[0],  # prints population size and weather
-              ' and ', weather[1], '. Also ', weather[2], ' and ', weather[3],
-              '.\n+', '='*77, '+\n', 'There ', 'is ' if len(intro_family) == 1  # separating == line and random family names doing random thing
-              else 'are ', ', '.join(intro_family), ' ',
-              random.choice(locations), '.\n', 'All of sudden ', patient_zero,
-              ' falls on ground, pale like snow'
-              ' and is all in tremors...\n', 'TWIST']
+    twist_a = (
+        f'Everybody are shocked.\n{random.choice(intro_family)} crouches trying to help and '
+        f'something terrific happens...\n{patient_zero} turns into a zombie and attacks '
+        f'the living!\nBlood rushes forth...\n'
+        f'Soon there are {initial_wave} zombies to brave new world...\n\n')
 
-    twist_a = (f'Everybody are shocked...\n{random.choice(intro_family)} crouches trying to help. '
-               f'Something terrific happens.\n{patient_zero} turns into a zombie and attacks '
-               f'the living.\nBlood rushes forth...\n'               
-               f'Soon there are {initial_wave} zombies to brave new world...\n\n')
+    twist_b = (
+        'There is nobody at hand to help. After a minute someone notices '
+        f'lying body\n... and runs away.\nMeanwhile {patient_zero} arises as a'
+        ' zombie and shuffles towards nearest house.\nThere is'
+        ' just this one zombie to brave new world...\n\n')
 
-    twist_b =  'There is nobody at hand to help. After a minute someone notices ' \
-               'lying body\n... and runs away.\nMeanwhile %s arises as a' \
-               ' zombie and seeks for his first victim.\nThere is' \
-               ' just this one zombie to brave new world...\n\n' % patient_zero
+    # how fast story is printed out
+    if sim_speed != 3:
+        story2_delay = 0.02
+    else:
+        story2_delay = 0
 
-    timer = 0
-    for item in story2:
-        if item == 'TWIST' and len(intro_family) != 1:
+    # printing out above story with correct twist
+    narration = story2
+    while True:
+        for item in narration:
+            print(item, end='')
+            time.sleep(story2_delay)
+        if narration in [twist_a, twist_b]:
+            break
+        elif len(intro_family) != 1:
             intro_family.remove(patient_zero)
-            item = twist_a
-
-        elif item == 'TWIST':
-            item = twist_b
-
-        for letter_item in item:
-            print(letter_item, end='')
-            time.sleep(timer)
-            if letter_item == '\n':  # because windows command line doesn't print by letter break will be every newline instead #''.?!+':
-                if sim_speed in [1, 2]:
-                    time.sleep(1)  # set 1 for release if windows command line
-                else:
-                    time.sleep(0)
-                continue
-            elif letter_item in '=':
-                timer = 0
-            else:
-                if sim_speed == 1:
-                    timer = 0.01  # set 0 for DEBUGGING and 0.01 RELEASE
-                elif sim_speed == 2:
-                    timer = 0.01  # set 0 for DEBUGGING and 0.01 RELEASE
-                else:
-                    timer = 0
-                continue
-
+            narration = twist_a
+        else:
+            narration = twist_b
 
     # time delay after intro scene
-    press_enter() if sim_speed in [1, 2] else time.sleep(0)
+    zville.press_enter() if sim_speed in [1, 2] else time.sleep(0)
 
     # NOW BUNCH OF VARIABLES FOR COMING SIMULATION
     #print('=' * 79)
     # print('TEST')print('TEST2') print('TEST3')  # DEBUGGING
     #fighting_instances = count_fighting_instances()  # 1 for each pair of infected-healthy tiles that touch each other
     pulped_body = 0
-    grid_data, houses_number   = gen_grid(village[1])  # takes: population size, returns: grid_data (list of lists) and houses_number(integer)
+    grid_data, houses_number   = zville.gen_grid(village_pop)  # takes: population size, returns: grid_data (list of lists) and houses_number(integer)
     family_custom = False  # Is family customised and saved by user ?
     incubation_time = 12                                                        # x5 seconds (one round)
-    current_pop     = village[1] - initial_wave                                 # amount of population now, integer
+    current_pop     = village_pop - initial_wave                                 # amount of population now, integer
     current_zombies = initial_wave                                              # amount of zombies now, integer
     zed_speed_kmh   = 3.22
-    zed_speed       = speed_round(kmh=3.22, delay=4, round_sec=5)               # zombies speed per game round assuming 3.22kmh speed delay rate(average delay caused by eg breaking to home
+    zed_speed       = zville.speed_round(kmh=3.22, delay=4, round_sec=5)               # zombies speed per game round assuming 3.22kmh speed delay rate(average delay caused by eg breaking to home
     town_size       = houses_number * 25                                        # house is 25square meters, in square meters
-    houses_dead     = round((village[1] - current_pop) / 4)                                         # amount of houses ravaged by zombies
+    houses_dead     = round((village_pop - current_pop) / 4)                                         # amount of houses ravaged by zombies
     wave_size       = round(current_zombies / (houses_number - houses_dead)+1)  # size of next wave that hits family
     round_count     = 1                                                         # how many 5 sec rounds passed
     timer = [0, 0]  # minutes, seconds
@@ -237,8 +209,8 @@ while True:  # MAIN LOOP
     #print(f'zombie game speed = {zed_speed} meters per game round')
 
     # PRINTING GRID FOR USER FOR FIRST TIME
-    print(f' {village[0].upper()}  {village[1]} villagers '.center(79, '='))  # Prints village name and population above grid
-    draw_grid_data(grid_data)  # draws first village grid (extended ascii graphic characters), with one infected cell and the family location
+    print(f' {village_name.upper()}  {village_pop} villagers '.center(79, '='))  # Prints village name and population above grid
+    zville.draw_grid_data(grid_data)  # draws first village grid (extended ascii graphic characters), with one infected cell and the family location
     print('=' * 79)
     print('Zombies head toward first house. Victims are unsuspecting...\n')
 
@@ -252,7 +224,7 @@ while True:  # MAIN LOOP
 
     # time delay after printing grid for the first time
     if sim_speed in [1, 2]:
-        press_enter(text='PRESS ENTER TO START APOCALYPSE')
+        zville.press_enter(text='PRESS ENTER TO START APOCALYPSE')
     else:
         time.sleep(0)
 
@@ -272,19 +244,19 @@ while True:  # MAIN LOOP
             print('=' * 79)
 
             # MAIN FIGHT CALL fight() and its arguments
-            grid_data, current_zombies, current_pop, pulped_body, round_count, family_cache = fight(
+            grid_data, current_zombies, current_pop, pulped_body, round_count, family_cache = zville.fight(
                 grid_data, current_zombies, current_pop, pulped_body,
-                village[1], round_count, sim_speed)
+                village_pop, round_count, sim_speed)
 
             # after each fight draw new grid data
-            draw_grid_data(grid_data)
+            zville.draw_grid_data(grid_data)
 
             # FAMILY FIGHT SECTION STARTS
             # after fight check if family_fight() is triggered
             if family_custom != 'dead' and grid_data[family_coord[0]][family_coord[1]] == '░':  # checks if family alive and if family tile in infected cell, if yes triggers family_fight()
 
                 # FAMILY_FIGHT() FUNCTION RUNS HERE !
-                family_custom, familyChar, familyStats, zombiesPulped = family_fight(family_cache, familyChar, familyStats, sim_speed, current_pop, current_zombies)
+                family_custom, familyChar, familyStats, zombiesPulped = zville.family_fight(family_cache, familyChar, familyStats, sim_speed, current_pop, current_zombies)
 
                 current_zombies -= zombiesPulped  # reducing amount of zombies by those pulped by family
                 pulped_body += zombiesPulped
@@ -302,7 +274,7 @@ while True:  # MAIN LOOP
 
             # time delay at end of fight
             if sim_speed == 1:
-                press_enter()
+                zville.press_enter()
             time.sleep(4) if sim_speed == 2 else time.sleep(0)
 
         # VARIOUS
@@ -323,29 +295,29 @@ while True:  # MAIN LOOP
         print(f'{timer[0]}:{timer[1]} min passed')
 
     print(f'The village has been wiped out in {timer[0]}:{timer[1]} min')
-    print('Zombies are crawling among smoldering ruins of {village[0]}.')
-    print(f'There are still {pulped_body} pulped corpses left for eating.')
+    print(f'Zombies are crawling among smoldering ruins of {village_name}.')
+    print(f'Pulped corpses left for eating = {pulped_body}.')
 
     # PLAY AGAIN ?
-    answer = yes_or_no('Do you want to play again ?')
+    answer = zville.yes_or_no('Do you want to play again ?')
     if answer == 'no':
         print(' ZOMBIES '.center(80, '+'), '\n')
-        time.sleep(1)
+        time.sleep(0.5)
         print(' S A Y '.center(80), '\n')
-        time.sleep(1)
+        time.sleep(0.5)
         print(' - T H A N K  Y O U - '.center(80, '$'))
-        time.sleep(1)
+        time.sleep(0.5)
         break
     else:  # user choose new game, resetting values
         if sim_speed == 1:  # intro game speed will change to default, other speeds won't change
             sim_speed = 2
         random_village = True
         random_family = True
-        village = []
+        village_name, village_pop, real_time = None, None, None
         familyChar = []
         familyStats = []
-        weather = f_weather('day')
-        intro_family, spam = family_gen(True)
+        weather = zville.f_weather('day')
+        intro_family, spam = zville.family_gen(True)
         initial_wave = len(intro_family)
         patient_zero = random.choice(intro_family)
 

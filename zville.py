@@ -681,8 +681,15 @@ def f_weather(daytime):
                     'cloudy', 'dark'),
                    ('dry', 'dry', 'damp', 'light rain', 'rains'), ('is warm',
                     'is cool', 'is hot', 'is cold', 'is moderately warm'))
-        return [random.choice(weather[0]), random.choice(weather[1]),
-                random.choice(weather[2]), random.choice(weather[3])]
+        
+        r_weather = (f'It is {random.choice(weather[0])} and {random.choice(weather[1])}. Also '
+                     f'{random.choice(weather[2])} and {random.choice(weather[3])}.')
+
+        return r_weather
+
+
+
+          
 
 
 
