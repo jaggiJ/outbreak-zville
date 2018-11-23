@@ -283,11 +283,7 @@ def family_gen(random_family):
         morale = 3  # not used in game
         familyStats.append([physical, mental, HP, morale])
 
-    if len(familyChar) < 1:  # DEBUGGING
-        print(f'familyChar content is {familyChar}')
-        print(f'k100roll is {k100_roll}')
-        print('FAMILY_CHAR LIST IS EMPTY WHILE GENERATING FAMILY CHARS WITH TRUE CONDITION - 427 line in functions')
-        raise ValueError
+    assert len(familyChar) > 0, 'FAMILY_CHAR LIST IS EMPTY'
 
     return familyChar, familyStats
 
@@ -476,9 +472,10 @@ def fight(grid, zombies, population, pulped, init_pop, rounds_passed, sim_speed)
         # time delay between rounds
         time.sleep(0.2) if sim_speed in [1, 2] else time.sleep(0)  # delay at end of each fighting round
 
-        if zombies < 1:
+        if zombies < 1:  # new game condition
             print('\nZombies has been stopped. Humanity is saved')
-            sys.exit()
+            family_cache = 'humans_won'
+            return '', '', '', '', '', family_cache  # empty values matches expected return
 
     # ADDING NEW INFECTED TILES
     # rule of thumb total infected tiles = population_removed / 4 | (pulped + zombies) / 4
@@ -575,6 +572,7 @@ def intro_game(story):  # Runs when user choose Intro Game
     print('=' * 79)
     time.sleep(2)
 
+
 def press_enter(text='PRESS ENTER'):
     """ Prints PRESS ENTER repeatedly until user presses enter, then breaks from loop
         if argument is provided in format text='something' it is used instead of default PRESS ENTER
@@ -591,6 +589,7 @@ def village_gen(random_village):
     :returns village_name, pop_size, time
     """
     if not random_village:  # user designed village
+        village_name, pop_size = '', ''
         while True:  # return village name and correct size
 
             try:
@@ -600,11 +599,12 @@ def village_gen(random_village):
                 if not pop_size.isdecimal():
                     print('Wrong format for population size. Enter integer.')
                     continue
-                if not pop_size or int(pop_size) not in range(100, 2501):
+                if not pop_size or int(pop_size) not in range(200, 2501):
                     continue
-
             except:
                 print('Something went wrong. Try again.')
+                continue
+
             else:
                 print('Your choice is ', village_name, pop_size, 'Is that '
                                                                  'correct? '
@@ -615,13 +615,17 @@ def village_gen(random_village):
                     break
                 else:
                     continue
+        assert pop_size in range(200, 2501), 'population not 200-2500 NOT-RANDOM'
+        assert village_name, 'user defined village has no name'
 
-    elif random_village:
+    else:  # random village
         spam = open('dictio//names_village.txt')
         village_name = random.choice(spam.read().split('\n'))
         spam.close()
-        pop_size = random.randint(100, 2500)
+        pop_size = random.randint(200, 2500)  # must be between 200 - 2500 for code consistency with alg1:min 4 pop per home alg2: chooses x,y grid size
 
+    assert village_name, 'village name missing in gen function'
+    assert pop_size, 'no population size generated in gen function'
     time_x = datetime.datetime.now().strftime("%Y-%m-%d %H:%M:%S")
 
     return [village_name.title(), pop_size, time_x]
@@ -668,6 +672,7 @@ def speed_round(kmh, delay, round_sec):
     speed = (kmh * 1000 / 3600) / delay * round_sec
     return speed
 
+
 def f_weather(daytime):
     """
     Generates list of strings depicting weather depending on time of day.
@@ -688,11 +693,6 @@ def f_weather(daytime):
         return r_weather
 
 
-
-          
-
-
-
 def yes_or_no(question):  # Returns 'yes' or 'no' based on first letter of user input.
 
     while True:
@@ -704,34 +704,3 @@ def yes_or_no(question):  # Returns 'yes' or 'no' based on first letter of user 
             return 'yes'
         elif item[0].lower() == 'n':
             return 'no'
-
-
-
-
-
-
-
-
-
-
-
-# FOR EXPORT (doesn't belong to simulation)
-
-
-def letters_correction(a_list):  # an example that removes all newlines from list items
-    """    Removes unwanted characters from strings
-    example: spam = ['zajebany \njabol', 'akuku\n kurwa']
-             print(letters_correction(spam))
-             -> ['zajebany jabol', 'akuku kurwa']
-    :param a_list: list data type
-    :return: corrected list
-    """
-    a_list_corrected = []
-
-    for item in a_list:
-        if '\n' in item:  # for custom changes
-            item = ''.join([letter for letter in item if letter != '\n'])  # for custom changes
-            a_list_corrected.append(item)
-            continue
-        a_list_corrected.append(item)
-    return a_list_corrected
