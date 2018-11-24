@@ -17,18 +17,18 @@ def draw_grid_data(grid_data):
     :param grid_data: list of lists that are grid
     :return: None
     """
-    for x_list in grid_data:  # grid has amount of lists exual to len(grid_data)
-        counter = 0  # to track when print next line (end=)
+    for y in range(len(grid_data)):  # grid has amount of lists equal to len(grid_data)
 
-        for y_value in x_list:  # each list has values amount len(grid_data[x_list])
-            print(' ', end='')  # ads extra spece between character in same row to match visuals with default big spaces between columns
+        for x in range(len(grid_data[y])):  # each list has values amount len(grid_data[x_list])
 
-            if counter == len(x_list) - 1:
-                print(y_value)
+            print(' ', end='')  # ads extra space between character in same row to match visuals with default big spaces between columns
+            cell = grid_data[y][x]
+
+            if x == len(grid_data[y]) - 1:  # last cell printed with default newline \n
+                print(cell)
+
             else:
-                print(y_value, end='')
-
-            counter += 1
+                print(cell, end='')
 
 
 def family_fight(family_cache, familyChar, familyStats, sim_speed, population, zombies):
@@ -39,11 +39,12 @@ def family_fight(family_cache, familyChar, familyStats, sim_speed, population, z
     family home will be reflected on grid only visually, it will serve as trigger and no other functionality on main grid
     outcome of family fight will affect zombies amount and pulped amount
     if family survives (returns family_custom == 'continue') it will carry on fighting after every fight()
-    :param sim_speed: integer used to determine time delay of information printed to user
-    :return:
-    :param family_cache: integer
-    :param familyChar: list of strings
-    :param familyStats: list of lists of integers that are family members personal statistics
+    :param family_cache: integer, holds amount of zombies from previous siege as base to calculate amount to attack the family
+    :param familyChar: [Anna, Mark, Tina...]
+    :param familyStats: list of lists of integers that are family members personal statistics [(3,3,3,6), (3,3,3,6), ...]
+    :param sim_speed: int e.g. 2
+    :param population: int 200-2500
+    :param zombies: int e.g. 15
     :return: family_custom, familyChar, familyStats, zombiesPulped
     """
     print('=' * 78)
@@ -51,9 +52,6 @@ def family_fight(family_cache, familyChar, familyStats, sim_speed, population, z
     print(f'{familyChar} prepare to defend perimeter.')
     print('=' * 78)
 
-    # time delay
-    #if sim_speed == 1:  # I think its redundant and causes double press enter
-    #    press_enter()
     time.sleep(2) if sim_speed == 2 else time.sleep(0)  # delay at end of each fighting round
 
     roundNumber = 1  # starting round counter value
@@ -88,14 +86,13 @@ def family_fight(family_cache, familyChar, familyStats, sim_speed, population, z
         print(zombieChar, '\n', familyChar,
               '\n' + '=' * 78)  # Zombies and Family characters going to fight that round
 
-
-        # FIGHTING ROUND LOOP
+        # FIGHTING ROUND LOOP, each zombie strikes once, then round ends
         for strZombie in zombieChar:  # All zombies attack chosen family member in sequence. That is one round of fight.
 
             # time delay after each zombie attack
             if sim_speed == 1:
                 time.sleep(0.3)
-            elif sim_speed ==2:
+            elif sim_speed == 2:
                 time.sleep(0.5)
             else:
                 time.sleep(0)
@@ -107,14 +104,13 @@ def family_fight(family_cache, familyChar, familyStats, sim_speed, population, z
             # now stats of random family member
             # found right string in family list (step1)
             if familyChar:  # Checks if there is someone left alive from family.
-                currentRandomFamilyName = familyChar[random.randint
-                (0, len(familyChar) - 1)]
+                currentRandomFamilyName = familyChar[random.randint(0, len(familyChar) - 1)]
+
             else:  # No living family members
                 break
 
             # step 2 assigning value as list found by index of step1 string
-            currentRandomFamilyStats = familyStats[familyChar.index
-            (currentRandomFamilyName)]
+            currentRandomFamilyStats = familyStats[familyChar.index(currentRandomFamilyName)]
             # Prints who attacks who.
             print(strZombie, 'attacks', currentRandomFamilyName, 'and', end=' ')
             # Counting power, comparing and applying damage
@@ -136,8 +132,7 @@ def family_fight(family_cache, familyChar, familyStats, sim_speed, population, z
                         currentRandomFamilyName)  # removing dead family from string list
                     casualties.append(currentRandomFamilyName)  # for ongoing tracking by round
                     family_casualties.append(currentRandomFamilyName)  # for final summary
-                    print(' (', currentRandomFamilyName, ' killed).',
-                          sep='')  # ...adds kills who? msg
+                    print(' (', currentRandomFamilyName, ' killed).', sep='')  # ...adds kills who? msg
 
                 else:  # Family hit but survived
                     # Print HP left if family survived
@@ -152,6 +147,7 @@ def family_fight(family_cache, familyChar, familyStats, sim_speed, population, z
                     print(' (', strZombie, 'killed).', sep='')
                     casualties.append(
                         strZombie)  # Appends dead zombie into list of casualties.
+
                 else:  # Zombie hit but survived
                     # Print HP left if zombie survived
                     print(' (HP left=', currentZombieStats[2], ').', sep='')
@@ -159,15 +155,8 @@ def family_fight(family_cache, familyChar, familyStats, sim_speed, population, z
             else:  # Nobody has power advantage.
                 print(' misses.')  # Counts as miss which is printed out.
 
-        """
-        MANIUPULATING IN CASUALTIES WARNING
-        Family members cannot be removed at end round since they must be removed immediately
-        to prevent next zombies that still not attacked in the round from attacking dead member.
-        Adds next round to counter. If dead zombies are removed immediately it will screw sequence
-        of zombie attacks for given round. They have to be removed at end of round.
-        """
-
-        if casualties:  # Prints round casualties and removes zombies fallen in that round
+        # COMBAT ROUND ENDS, prints round casualties and removes zombies fallen in that round
+        if casualties:
             print('=' * 78, '\n', casualties, 'has been killed in this round')
 
             for dead in casualties:  # iterating through list of strings that contains current round casualties
@@ -177,9 +166,9 @@ def family_fight(family_cache, familyChar, familyStats, sim_speed, population, z
                     zombieChar.remove(dead)  # remove dead zombie from string list
                     zombiesPulped += 1
 
-        roundNumber += 1  # rounds counter
+        roundNumber += 1  # rounds counter, loop back up to next round of fight
 
-    # END GAME RESOLUTION. Prints how    long    fight    lasted and all    survivors    from either team.
+    # PRINTING END FIGHT SUMMARY
     print('=' * 78, '\nThe fight lasted ', roundNumber * 3,
           'seconds\n' + '=' * 78)
     print('Survivors are: ')
@@ -187,7 +176,8 @@ def family_fight(family_cache, familyChar, familyStats, sim_speed, population, z
         print('', x)
     for x in zombieChar:
         print('', x)
-    print(f'zombies pulped in this fight {zombiesPulped}. Family members killed: {family_casualties}')
+    print(f'zombies pulped in this fight {zombiesPulped}. '
+          f'Family members killed: {family_casualties}')
     print('=' * 78)
 
     # time delay at end of fight
@@ -197,9 +187,7 @@ def family_fight(family_cache, familyChar, familyStats, sim_speed, population, z
 
     if len(familyChar) > 0:
         family_custom = 'continue'  # when family survived carry them into next family fight
-        #print('I changed value of family custom to continue')  # DEBUGGING
     else:
-        #print('I changed value of family custom to dead')  # DEBUGGING
         family_custom = 'dead'  # when no more family_fight() to trigger
 
     return family_custom, familyChar, familyStats, zombiesPulped
@@ -207,7 +195,7 @@ def family_fight(family_cache, familyChar, familyStats, sim_speed, population, z
 
 def family_gen(random_family):
     """ Generates/User input family names and random generates stats for them.
-    :param  random_family True or False - random or custom genration
+    :param  random_family: True or False - designed)
     :return: [familyChar], [familyStats]
     """
     familyChar = []
@@ -218,20 +206,21 @@ def family_gen(random_family):
             name = input('Type family member name or enter to finish:  ')
             if name:
                 familyChar.append(name.title())
-                #print('I should add name')
-                #print(familyChar)
+
             elif not name and not familyChar:
                 print('Must be at least one name.')
                 continue
+
             elif len(name) > 20:
                 print('Name too large. Use no more than 20 characters.')
                 continue
+
             else:  # minimum one name and user hit enter
                 break
 
     elif random_family:  # family size 1 - 8 , most likely  3-6 family , other ranges less likely
         k100_roll = random.randint(1, 100)
-        size_f = 0  # DEBUGGING change to 0 if testing finished, and uncomment lower section
+        size_f = 0
 
         if k100_roll in range(1, 51):
             size_f = random.randint(3, 5)  # 3 or 4 or 5 family members
@@ -244,18 +233,12 @@ def family_gen(random_family):
         f_txt = open('dictio//names_female.txt')
         male_names = m_txt.read().split('\n')  # all male names list
         female_names = f_txt.read().split('\n')  # all female names list
-        #print(f'family size = {size_f}')  # DEBUGGING
 
         while True:
             if size_f == 2:
                 if random.randint(1, 100) < 80:  # if family 2 members there is 80 % gender is opposite
                     familyChar.append(random.choice(male_names))
-                    #print('I should add male name')
-                    #print(familyChar)
                     familyChar.append(random.choice(female_names))
-                    #print('I should add female name')
-                    #print(familyChar)
-                    # print('I executed code for only 2 family with both gender opposite') DEBUGGING
                     break
 
             for index in range(size_f):
@@ -263,12 +246,9 @@ def family_gen(random_family):
 
                 if gender == 'm':
                     familyChar.append(random.choice(male_names))
-                    #print('I should add male name')
-                    #print(familyChar)
+
                 elif gender == 'f':
                     familyChar.append(random.choice(female_names))
-                    #print('I should add female name')
-                    #print(familyChar)
             break
 
         m_txt.close()
@@ -276,11 +256,11 @@ def family_gen(random_family):
 
     familyStats = []  # stats of family members [physical, mental, HP, morale]
 
-    for i in familyChar:  # returns stats of family members (semi-randomised)
+    for i in familyChar:  # returns random stats of family members
         physical = random.randint(2, 5)
         mental = random.randint(2, 5)
         HP = physical * 2  # HP is double of physical
-        morale = 3  # not used in game
+        morale = 3  # not implemented
         familyStats.append([physical, mental, HP, morale])
 
     assert len(familyChar) > 0, 'FAMILY_CHAR LIST IS EMPTY'
@@ -288,15 +268,15 @@ def family_gen(random_family):
     return familyChar, familyStats
 
 
-def fight(grid, zombies, population, pulped, init_pop, rounds_passed, sim_speed):
+def fight(grid, zombies, population, pulped, rounds_passed, sim_speed):
     """ counts infected tiles, amount of zombies and defenders to fight, makes them fight, adds new infected zones based on human casualties
     # example use: grid_data, zombies, population, pulped, round_count = fight(grid=grid_data, zombies=5, population=1495, pulped=0, init_pop=1500, rounds_passed=26)
-    :param grid:
-    :param zombies:
-    :param population:
-    :param pulped:
-    :param init_pop:
+    :param grid: grid data list of lists with ASCII graph values that are single cell representation
+    :param zombies: int e.g. 15
+    :param population: int in range(200, 2501)
+    :param pulped: int, 'dead' zombies
     :param rounds_passed will be concatenated with rounds_count and returned as new_time
+    :param sim_speed in [1,2,3], int
     :return: updated grid, new zombies amount, new population amount, new pulped amount, new time
     """
     zombies_start_amount = zombies  # for tracking zombie&human casualties for printing out
@@ -328,7 +308,7 @@ def fight(grid, zombies, population, pulped, init_pop, rounds_passed, sim_speed)
 
                 # scan around infected tile for healthy tiles, add coord of first one to grid_attacked if not already present
                 # area_scan = [(y-1, x), (y-1,x+1), (y,x+1), (y+1,x+1), (y+1,x), (y+1,x-1), (y,x-1), (y-1,x-1) ]  # N, NE, E, SE, S, SW, W, NW
-                for ry, rx in [(y-1, x), (y-1,x+1), (y,x+1), (y+1,x+1), (y+1,x), (y+1,x-1), (y,x-1), (y-1,x-1) ]:  # rx relative x ry relative y
+                for ry, rx in [(y-1, x), (y-1, x+1), (y, x+1), (y+1, x+1), (y+1, x), (y+1, x-1), (y, x-1), (y-1, x-1)]:  # rx relative x ry relative y
                     try:  # ref 'fry65' affected by chosen family tile graphical representation
                         if ry >= 0 and rx >= 0 and grid[ry][rx] in ['▓', '█'] and (ry, rx) not in grid_attacked:  # absolute coord must be 0+ otherwise they are out of grid
                             grid_attacked.append((ry, rx))  # 3. makes list of grid_attacked coord eg [(1, 4), (2, 3)]
@@ -336,41 +316,20 @@ def fight(grid, zombies, population, pulped, init_pop, rounds_passed, sim_speed)
                     except IndexError:  # in case searched coord is of out of range, except ignores error
                         pass
 
-
     # REMOVING ATTACKED TILES IF NOT ENOUGH ZOMBIES - to maintain siege needed 1 + (3 * per extra cell)
-    #print(f'initial grid attacked = {len(grid_attacked)}')  # DEBUGGING
     zombies_needed_for_siege = 1 + (3 * len(grid_attacked))
-    #print(f'zombies needed for siege = {zombies_needed_for_siege}')  # DEBUGGING
 
     while len(grid_attacked) > 1 and zombies_needed_for_siege > zombies:
-        #print(f'grid attacked {grid_attacked}')
+
         del grid_attacked[random.randint(0, len(grid_attacked) - 1)]
-        #print(f'one less cell will be attacked due to insufficient amount of zeds')  # DEBUGGING
         zombies_needed_for_siege -= 3
-        #print(f'zombies needed for siege = {zombies_needed_for_siege}')  # DEBUGGING
 
     # HOW MANY ZOMBIES ATTACKED SINGLE CELL - needed as argument for family_fight(), that many zombies will attack the family
     family_cache = round(zombies / len(grid_attacked))  # average number of zombies per attacked cell
-    #print(f'zombies per attacked cell = {family_cache}')  # DEBUGGING
-
-    # DEBUGGING
-    #print(f'infected tiles = {len(infected_tiles)}')  # DEBUGGING
-    #print(f'healthy tiles = {healthy_tiles}')
-    #print(f'healthy tiles attacked = {len(grid_attacked)}, {grid_attacked}')  # DEBUGGING
 
     # DEFENDERS AGAINST ZOMBIES
     pop_fighting = int(population / healthy_tiles * len(grid_attacked))
-    # i want leave minimum population out of fight >= healthy tiles - attacked tiles * 4
 
-    """
-    # loop trimming population due to fight, to prevent leaving empty houses at end
-    #print(f'DEFENDERS before loop = {pop_fighting}')  # DEBUGGING
-    # that loop is redundant, in case there are houses left intact when population is 0 turn it on
-    while population - pop_fighting < (healthy_tiles - len(grid_attacked)) * 4 and pop_fighting > len(grid_attacked):
-        pop_fighting -= 1
-    # while populationNotFighting (1116) < housesAtPeace (287) * 4 (1148)   AND  popFighting > tilesAttacked
-    #print(f'DEFENDERS after loop = {pop_fighting}')  # DEBUGGING
-    """
     if pop_fighting < 1:  # minimum 1 stand to defend home
         print('# minimum 1 stand to defend home')  # DEBUGGING
         pop_fighting = 1
@@ -393,26 +352,23 @@ def fight(grid, zombies, population, pulped, init_pop, rounds_passed, sim_speed)
         press_enter()
 
     while zombies > 0 and pop_fighting > 0 or pop_fighting == 0 and bitten > 0:
-        #print(f'round number = {rounds_count}')
-        #print(f'zombies for round = {zombies}')
-        #print(f'defenders for round = {pop_fighting}')
-        for i in range(zombies):  #  one round, each zombie attack defender
-            #print(f'bitten ={bitten}')
 
+        for i in range(zombies):  # one round, each zombie attack defender
             if pop_fighting > 0:
                 if zombies > 1:
                     roll = random.randint(1, 100)
+
                 else:  # let's increase chances of survival for last zombie by 2 times
                     roll = random.randint(1, 2)
+
                     if roll == 1:
                         roll = random.randint(1, 65)
+
                     else:
                         roll = random.randint(66, 90)  # human dead 66 - 85 or zombie pulped 86 - 90 # zombie doubles his chances
-                        #print('ONLY ONE ZOMBIE LEFT, his choice roll is ', roll)  # DEBUGGING
-                #print(f'roll is = {roll}')
+
                 if roll <= 65:
                     pass
-                    #print('one draws')
 
                     # 40% for adding a bite when not already bitten
                     if pop_fighting > 1 and bitten < pop_fighting and random.randint(1, 100) <= 40:
@@ -422,13 +378,11 @@ def fight(grid, zombies, population, pulped, init_pop, rounds_passed, sim_speed)
                         # if i > bitten then bitten += 1
                         if random.randint(bitten, pop_fighting) > bitten:
                             bitten += 1
-                            #print('I am bitten !')
+
                             if bitten_to_zombie == 0:  # adding infection counter if not already running
-                                #print(f'first human bit, adding infection counter')
                                 bitten_to_zombie = rounds_count + 11  # infected turn into zombies each 60 seconds since first of them is bitten
 
                 elif roll <= 85:  # roll 66 - 85 human dies, zombie raises
-
                     # how to find if one who died was bitten before ?
                     # pop_fighting = 2
                     # bitten = 1
@@ -436,6 +390,7 @@ def fight(grid, zombies, population, pulped, init_pop, rounds_passed, sim_speed)
                     # if i <= bitten then bitten -= 1
                     if bitten == 1 and pop_fighting == 1:  # when last defender that died was already bitten
                         bitten = 0
+
                     elif bitten > 0 and pop_fighting > 1 and random.randint(1, pop_fighting) <= bitten:  # check if dead human was bitten before, to remove amount of infected
                         bitten -= 1
 
@@ -463,8 +418,6 @@ def fight(grid, zombies, population, pulped, init_pop, rounds_passed, sim_speed)
             population -= bitten
             bitten = 0
             bitten_to_zombie = 0
-            # need to remove infected turned from pop_fighting
-            # need to calculate if dead human is one that was bitten
 
         zombies -= pile  # adjusting number of zombies by pulped/raised in round
         pile = 0  # resetting pulped pile
@@ -475,7 +428,7 @@ def fight(grid, zombies, population, pulped, init_pop, rounds_passed, sim_speed)
         if zombies < 1:  # new game condition
             print('\nZombies has been stopped. Humanity is saved')
             family_cache = 'humans_won'
-            return '', '', '', '', '', family_cache  # empty values matches expected return
+            return '', '', '', '', '', family_cache  # empty values matching expected return
 
     # ADDING NEW INFECTED TILES
     # rule of thumb total infected tiles = population_removed / 4 | (pulped + zombies) / 4
@@ -485,11 +438,8 @@ def fight(grid, zombies, population, pulped, init_pop, rounds_passed, sim_speed)
     infected_added_this_fight = 0
     while True:
         if population == 0:  # end game condition, turning all into infected
-            # example of grid_attacked is [(4, 1), (4, 0)]
-            #print('HEALTHY EQUAL TO ATTACKED, ALL GRID SHOULD TURN INFECTED OR EDIT CODE FOR BETTER ALGORITM')
-            #print(f'grid attacked is = {grid_attacked}')
-            #print('algoritm used to add it is grid[y][x] == \'░\'')
-            for y, x in grid_attacked:
+
+            for y, x in grid_attacked:  # e.g. [(4, 1), (4, 0)]
                 grid[y][x] = '░'
                 infected_added_this_fight += 1
             break
@@ -522,37 +472,30 @@ def fight(grid, zombies, population, pulped, init_pop, rounds_passed, sim_speed)
 
 def gen_grid(population):
     """ Generates grid data (each house is one grid cell)
-    example use: grid = gen_grid(1125); print(f'lists = {len(grid)}, values = {len(grid[0])}, population = {len(grid)*len(grid[0]*4)}')
     :param population: eg 1125
-    :return: grid_data eg [[▓,▓,▓], [▓,▓,▓]]
-             houses_number eg 289
+    :return: grid_data eg [[▓,▓,▓], [▓,▓,▓]], houses_number e.g. 289
     """
     # grid amount must be less or equal to population eg grid_x * grid_y * 4 <= population
-
-    y_example, x_example = 7, 7  # minimum grid covers population 200 (196)
+    y_example, x_example = 7, 7  # minimum grid covers population 200 (196), that is why gen_village has forced 200 population minimum
     y_lists = 7
     x_values = 7
 
-    iteration = 0  # to check parzyste / nieparzyste
+    iteration = 0  # evens odds checks
     while True:
         iteration += 1
-        #print(iteration)  # DEBUGGING
-
         if y_example * x_example * 4 > population:  # checks if next operation WON'T exceed allowable amount
             break
         else:
             y_lists, x_values = y_example, x_example  # example passed check, return values updated
 
-        if iteration % 2:  # if nieparzyste
+        if iteration % 2:  # if odds
             x_example += 1
-        elif not iteration % 2:  # if parzyste
+        elif not iteration % 2:  # if evens
             y_example += 1
 
-        # print(f'y_example = {y_example}, x_example = {x_example}')  # DEBUGGING
-
-    grid = [['▓'] * x_values for i in range(y_lists)]  # list comprehension returns grid which y * x * 4 are as close as possible to population while not exceeding it eg grid 7 * 7 is most close to population 200
+    # list comprehension returns grid which (y * x * 4) == nearest <=population_size, e.g. grid (7 * 7) is most close and <= population 200
+    grid = [['▓'] * x_values for i in range(y_lists)]
     houses_number = x_values * y_lists
-    # print(f'lists = {len(grid)}, values = {len(grid[0])}, population = {len(grid)*len(grid[0]*4)}')  # DEBUGGING
 
     return grid, houses_number
 
@@ -563,12 +506,14 @@ def intro_game(story):  # Runs when user choose Intro Game
     """
     # printing out the story by letter at speed defined in time.sleep below
     print('=' * 79)
+
     for item in story:
         print(item, end='', sep='')
         if item in '.?!':
-            time.sleep(0.5)  # DEBUGGING change for 1 for release
+            time.sleep(0.5)
             continue
-        time.sleep(0.03)  # DEBUGGING temporary ultra speed , change for 0.03 for release
+        time.sleep(0.03)
+
     print('=' * 79)
     time.sleep(2)
 
@@ -589,7 +534,7 @@ def village_gen(random_village):
     :returns village_name, pop_size, time
     """
     if not random_village:  # user designed village
-        village_name, pop_size = '', ''
+
         while True:  # return village name and correct size
 
             try:
@@ -601,7 +546,7 @@ def village_gen(random_village):
                     continue
                 if not pop_size or int(pop_size) not in range(200, 2501):
                     continue
-            except:
+            except ValueError:
                 print('Something went wrong. Try again.')
                 continue
 
@@ -684,8 +629,8 @@ def f_weather(daytime):
                     'light breeze', 'windy', 'windy', 'strong wind'),
                    ('sunshine', 'bright', 'bright', 'cloudy', 'cloudy',
                     'cloudy', 'dark'),
-                   ('dry', 'dry', 'damp', 'light rain', 'rains'), ('is warm',
-                    'is cool', 'is hot', 'is cold', 'is moderately warm'))
+                   ('dry', 'dry', 'damp', 'light rain', 'rains'), ('is warm', 'is cool', 'is hot',
+                                                                   'is cold', 'is moderately warm'))
         
         r_weather = (f'It is {random.choice(weather[0])} and {random.choice(weather[1])}. Also '
                      f'{random.choice(weather[2])} and {random.choice(weather[3])}.')

@@ -196,7 +196,7 @@ while True:
     current_zombies = initial_wave                                        # amount of zombies now, integer
     zed_speed_kmh   = 3.22
     zed_speed       = zville.speed_round(kmh=3.22, delay=4, round_sec=5)  # zombies speed per game round assuming 3.22kmh speed delay rate(average delay caused by eg breaking to home
-    family_cache = 0  # last amount of zombies per cell attacked
+    family_cache = 0  # last amount of zombies per cell attacked, also used for human win condition check (turns to string and ends game)
     round_count     = 1                                                   # how many 5 sec rounds passed
     timer = [0, 0]  # minutes, seconds
     # how much rounds it take to move the swarm to next fight ?
@@ -255,8 +255,8 @@ while True:
 
             # zville.fight() and its arguments
             grid_data, current_zombies, current_pop, pulped_body, round_count, family_cache = \
-                zville.fight(grid_data, current_zombies, current_pop, pulped_body, village_pop,
-                             round_count, sim_speed)
+                zville.fight(grid_data, current_zombies, current_pop, pulped_body, round_count,
+                             sim_speed)
             if family_cache == 'humans_won':  # check for end game condition
                 break
 
@@ -296,6 +296,7 @@ while True:
         if current_pop < 1:  # check for new game condition
             zombies_win = True
             break
+
         # updating time and iteration
         round_count += 1
         timer[1] += 5
