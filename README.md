@@ -1,7 +1,11 @@
 ### Outbreak Zville v0.2 is uploaded and working  
 
-Outbreak Zville is simulation of zombie virus spread in random/custom sized village.
-It runs in command line interface, has basic ascii graphic and is written in procedural python with standard library.
+Outbreak Zville is realistic simulation of zombie virus spread in village settings.
+Simulation predicts that it takes around one hour for zombie virus to wipe out a village of size 200-2500.
+Zombie virus type: Romero's LH (latency happy).
+
+Simulation uses probablilities assumptions to calculate likely outcome.  
+Zville runs in command line interface, has basic ascii graphic and is written in procedural python with standard library.
 
 ![Imgur](https://i.imgur.com/d5SR4Qv.png)
 
