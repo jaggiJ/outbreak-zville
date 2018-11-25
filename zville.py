@@ -1,4 +1,5 @@
-#! python 3
+#!/usr/bin/env python3
+
 """
 BSD 3-Clause License
 Copyright (c) 2018, jaggiJ (jagged93 <AT> gmail <DOT> com), Aleksander Zubert
@@ -33,13 +34,13 @@ def draw_grid_data(grid_data):
 
 def family_fight(family_cache, familyChar, familyStats, sim_speed, population, zombies):
     """
-    Only random family for now ?
     family members are not included in population
     family_fight() triggers after fight() when family_coord is in infected cell and family is still alive (family_custom != 'dead')
     family home will be reflected on grid only visually, it will serve as trigger and no other functionality on main grid
     outcome of family fight will affect zombies amount and pulped amount
-    if family survives (returns family_custom == 'continue') it will carry on fighting after every fight()
-    :param family_cache: integer, holds amount of zombies from previous siege as base to calculate amount to attack the family
+    if family survives (returns family_custom == 'continue'), they will fight next round with new wave
+    :param family_cache: integer, amount of zombies that attacked single cell in previous general fight
+                                  used as amount of zombies that will attack the family
     :param familyChar: [Anna, Mark, Tina...]
     :param familyStats: list of lists of integers that are family members personal statistics [(3,3,3,6), (3,3,3,6), ...]
     :param sim_speed: int e.g. 2
@@ -47,8 +48,11 @@ def family_fight(family_cache, familyChar, familyStats, sim_speed, population, z
     :param zombies: int e.g. 15
     :return: family_custom, familyChar, familyStats, zombiesPulped
     """
+    if family_cache > zombies or population < 1:  # no more zombies can attack the family than total zombies
+        family_cache = zombies                    # if no population left all zombies attack
+
     print('=' * 78)
-    print(f'The Family has been attacked by {family_cache} zombies.')
+    print(f'The Family has been attacked by {family_cache if population > 0 else zombies} zombies.')
     print(f'{familyChar} prepare to defend perimeter.')
     print('=' * 78)
 
