@@ -16,10 +16,10 @@ import zville  # zville functions
 import data  # zville database
 
 # DEBUGGING SET_UP #levels:debug, info, warning, error, critical
-logging.basicConfig(filename='debug_zville.txt', level=logging.DEBUG,
-                    format='%(asctime)s - %(levelname)s - %(message)s', datefmt='%d/%m/%Y %H:%M:%S')  # DEBUG to file
-# logging.basicConfig(level=logging.DEBUG, format='%(asctime)s - %(levelname)s - %(message)s')  # DEBUG to console
-logging.disable(logging.DEBUG)  # disables all logging messages at <ERROR> or lover level
+#logging.basicConfig(filename='debug_zville.txt', level=logging.DEBUG,
+#                    format='%(asctime)s - %(levelname)s - %(message)s', datefmt='%d/%m/%Y %H:%M:%S')  # DEBUG to file
+logging.basicConfig(level=logging.DEBUG, format='%(asctime)s - %(levelname)s - %(message)s')  # DEBUG to console
+logging.disable(logging.INFO)  # disables all logging messages at <ERROR> or lover level
 
 sim_speed = 2  # need to be saved between simulations so its outside loop
 saved_family = ()  # tuple here will store designed family
