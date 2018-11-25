@@ -1,4 +1,4 @@
-### Outbreak Zville v0.21 is up anytime now  
+### Outbreak Zville v0.21 is up 
 
 Outbreak Zville is __realistic simulation__ of zombie virus spread in village settings.
 Simulation predicts that it takes around __one hour for zombie virus to wipe out a village__ of size 200-2500.
@@ -7,7 +7,7 @@ Simulation uses probablilities assumptions to calculate likely outcome. It runs 
 
 ![Imgur](https://i.imgur.com/d5SR4Qv.png)
 
-**Fast download & run for Windows[7, 8, 10]** -> [soon]()
+**Fast download & run for Windows[7, 8, 10]** -> [https://ufile.io/fs8ee](https://ufile.io/fs8ee)
 
 **Installation instructions**: [https://github.com/jaggiJ/outbreak_zville/wiki/Installation-Instructions](https://github.com/jaggiJ/outbreak_zville/wiki/Installation-Instructions)
 
