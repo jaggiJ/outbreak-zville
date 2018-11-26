@@ -6,10 +6,12 @@ Copyright (c) 2018, jaggiJ (jagged93 <AT> gmail <DOT> com), Aleksander Zubert
 All rights reserved.
 Simulation of zombie virus in village.
 """
+
 import random
 import datetime
 import sys
 import time
+# import logging
 
 
 def draw_grid_data(grid_data):
@@ -44,7 +46,7 @@ def family_fight(family_cache, familyChar, familyStats, sim_speed, population, z
     :param familyChar: [Anna, Mark, Tina...]
     :param familyStats: list of lists of integers that are family members personal statistics [(3,3,3,6), (3,3,3,6), ...]
     :param sim_speed: int e.g. 2
-    :param population: int 200-2500
+    :param population: int 200-2500; needed to check if release of all zombies left is needed when pop=0
     :param zombies: int e.g. 15
     :return: family_custom, familyChar, familyStats, zombiesPulped
     """
@@ -52,7 +54,7 @@ def family_fight(family_cache, familyChar, familyStats, sim_speed, population, z
         family_cache = zombies                    # if no population left all zombies attack
 
     print('=' * 78)
-    print(f'The Family has been attacked by {family_cache if population > 0 else zombies} zombies.')
+    print(f'The Family has been attacked by {family_cache} zombies.')
     print(f'{familyChar} prepare to defend perimeter.')
     print('=' * 78)
 
@@ -64,8 +66,6 @@ def family_fight(family_cache, familyChar, familyStats, sim_speed, population, z
 
     # ADVERSARIES GENERATION. Their numbers and stats are generated each simulation.
     adversaryNumber = family_cache
-    if population < 1:
-        adversaryNumber = zombies
 
     # lists of zombie characters and zombie stats of those characters
     zombieChar = ['zombie' + str(i + 1) for i in range(adversaryNumber)]
@@ -304,7 +304,7 @@ def fight(grid, zombies, population, pulped, rounds_passed, sim_speed):
         """
         for x in range(len(grid[y])):  # iterates through all values contained in list instance y # x is instance of value
 
-            if grid[y][x] == '▓':  # 1. counts healthy tiles,
+            if grid[y][x] in ['▓', '█']:  # 1. counts healthy tiles,
                 healthy_tiles += 1
             if grid[y][x] == '░':  # 2 & 3
 
@@ -470,6 +470,7 @@ def fight(grid, zombies, population, pulped, rounds_passed, sim_speed):
     if sim_speed == 1:
         press_enter()
     time.sleep(4) if sim_speed == 2 else time.sleep(0)  # delay at end of each fighting round
+    assert population >= 0, 'Population amount to return in fight() -> less than zero.'
 
     return grid, zombies, population, pulped, new_time, family_cache
 
@@ -504,7 +505,7 @@ def gen_grid(population):
     return grid, houses_number
 
 
-def intro_game(story):  # Runs when user choose Intro Game
+def intro_sim(story):  # Runs when user choose Intro Game
     """ Text intro for game take story string and prints it out by letter
     :return: None
     """

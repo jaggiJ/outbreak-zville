@@ -59,7 +59,7 @@ while True:
         main_choice = zville.user_menu_choice()  # Main game menu returns integer
 
         if main_choice == 0:  # Intro game
-            zville.intro_game(data.STORY)  # Intro story
+            zville.intro_sim(data.STORY)  # Intro story
             random_family = True
             random_village = True
             village_name, village_pop, real_time = zville.village_gen(random_village)
@@ -111,7 +111,7 @@ while True:
                 print('Nothing designed yet.')
                 continue
 
-            if zville.yes_or_no('Do you want to start game with those settings?') == 'no':
+            if zville.yes_or_no('Do you want to start simulation with those settings?') == 'no':
                 print('\nSetting village and family to random.')
                 random_family = True
                 familyChar = []
@@ -250,7 +250,7 @@ while True:
         if countdown_set == 0:
             print('=' * 79)
             print(
-                f'siege is broken, {current_zombies} zombies attack !')
+                f'defences shattered, {current_zombies} zombies attack !')
             print('=' * 79)
 
             # zville.fight() and its arguments
@@ -314,7 +314,7 @@ while True:
         print(f'Pulped corpses left for eating = {pulped_body}.')
 
     # PLAY AGAIN ?
-    answer = zville.yes_or_no('Do you want to play again ?')
+    answer = zville.yes_or_no('Do you want to run simulation again ?')
 
     if answer == 'no' and current_zombies > 1:  # no, zombies won
         print(' ZOMBIES '.center(80, '+'), '\n')
