@@ -7,7 +7,7 @@ Simulation uses probablilities assumptions to calculate likely outcome. It runs 
 
 ![Imgur](https://i.imgur.com/d5SR4Qv.png)
 
-**Fast download & run for Windows[7, 8, 10]** -> [zville021.exe](https://github.com/jaggiJ/outbreak_zville/releases/download/v0.21/zville021.exe)
+**Fast download & run for Windows[7, 8, 10]** -> [zville021.exe](https://github.com/jaggiJ/outbreak_zville/releases/download/v0.21/zville021.exe)   **Linux** -> [zville-v021.tar.gz](https://github.com/jaggiJ/outbreak_zville/releases/download/v0.21/zville-v021.tar.gz)
 
 **Installation instructions**: [https://github.com/jaggiJ/outbreak_zville/wiki/Installation-Instructions](https://github.com/jaggiJ/outbreak_zville/wiki/Installation-Instructions)
 
