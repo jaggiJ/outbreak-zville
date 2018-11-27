@@ -7,18 +7,18 @@ Simulation uses percentage chances to calculate likely outcome. It runs in comma
 
 ![Imgur](https://i.imgur.com/d5SR4Qv.png)
 
-**Fast download & run for Windows[7, 8, 10]** -> [zville021.exe](https://github.com/jaggiJ/outbreak_zville/releases/download/v0.21/zville021.exe)   **Linux** -> [zville-v021.tar.gz](https://github.com/jaggiJ/outbreak_zville/releases/download/v0.21/zville-v021.tar.gz)
+**Fast download & run for Windows[7, 8, 10]** -> [zville021.exe](https://github.com/jaggiJ/Outbreak-Zville/releases/download/v0.21/zville021.exe)   **Linux** -> [zville-v021.tar.gz](https://github.com/jaggiJ/Outbreak-Zville/releases/download/v0.21/zville-v021.tar.gz)
 
-**Installation instructions**: [https://github.com/jaggiJ/outbreak_zville/wiki/Installation-Instructions](https://github.com/jaggiJ/outbreak_zville/wiki/Installation-Instructions)
+**Installation instructions**: [https://github.com/jaggiJ/outbreak_zville/wiki/Installation-Instructions](https://github.com/jaggiJ/Outbreak-Zville/wiki/Installation-Instructions)
 
 **IRC**: #zville on freenode.net -> [https://webchat.freenode.net/](https://webchat.freenode.net/?nick)
 
-**Wiki** -> [https://github.com/jaggiJ/outbreak_zville/wiki](https://github.com/jaggiJ/outbreak_zville/wiki)
+**Wiki** -> [https://github.com/jaggiJ/outbreak_zville/wiki](https://github.com/jaggiJ/Outbreak-Zville/wiki)
 
-**Contributing** -> [https://github.com/jaggiJ/outbreak_zville/issues/8](https://github.com/jaggiJ/outbreak_zville/issues/8)
+**Contributing** -> [https://github.com/jaggiJ/outbreak_zville/issues/8](https://github.com/jaggiJ/Outbreak-Zville/issues/8)
 
-**Development** -> [https://github.com/jaggiJ/outbreak_zville/projects/1](https://github.com/jaggiJ/outbreak_zville/projects/1)  
+**Development** -> [https://github.com/jaggiJ/outbreak_zville/projects/1](https://github.com/jaggiJ/Outbreak-Zville/projects/1)  
 
 **Support zville-zombie$** -> [https://www.patreon.com/zville](https://www.patreon.com/zville)    ![Imgur](https://i.imgur.com/S44353Z.png)  
 
-**Realism monitoring** -> [https://github.com/jaggiJ/outbreak_zville/wiki/Realism-status](https://github.com/jaggiJ/outbreak_zville/wiki/Realism-status)
+**Realism monitoring** -> [https://github.com/jaggiJ/outbreak_zville/wiki/Realism-status](https://github.com/jaggiJ/Outbreak-Zville/wiki/Realism-status)
