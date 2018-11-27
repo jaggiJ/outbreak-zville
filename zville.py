@@ -54,8 +54,9 @@ def family_fight(family_cache, familyChar, familyStats, sim_speed, population, z
         family_cache = zombies                    # if no population left all zombies attack
 
     print('=' * 78)
-    print(f'The Family has been attacked by {family_cache} zombies.')
-    print(f'{familyChar} prepare to defend perimeter.')
+    print('The Family has been attacked by {family_cache} zombies.'
+          .format(family_cache=family_cache))
+    print('{familyChar} prepare to defend perimeter.'.format(familyChar=familyChar))
     print('=' * 78)
 
     time.sleep(2) if sim_speed == 2 else time.sleep(0)  # delay at end of each fighting round
@@ -180,8 +181,9 @@ def family_fight(family_cache, familyChar, familyStats, sim_speed, population, z
         print('', x)
     for x in zombieChar:
         print('', x)
-    print(f'zombies pulped in this fight {zombiesPulped}. '
-          f'Family members killed: {family_casualties}')
+    print('zombies pulped in this fight {zombiesPulped}. '
+          'Family members killed: {family_casualties}'
+          .format(zombiesPulped=zombiesPulped, family_casualties=family_casualties))
     print('=' * 78)
 
     # time delay at end of fight
@@ -342,7 +344,8 @@ def fight(grid, zombies, population, pulped, rounds_passed, sim_speed):
         print('last stand, every villager turns into defender')
         pop_fighting = population
 
-    print(f'                 {pop_fighting} defenders       {len(grid_attacked)} homes affected')  # 17 spaces to match "siege is broken, "
+    print('                 {pop_fighting} defenders       {len_grid_attacked} homes affected'
+          .format(pop_fighting=pop_fighting, len_grid_attacked=len(grid_attacked)))  # 17 spaces to match "siege is broken, "
     print('=' * 79)
     if sim_speed in [2]:
         time.sleep(3)
@@ -416,7 +419,7 @@ def fight(grid, zombies, population, pulped, rounds_passed, sim_speed):
         # infected turn zombie
         if rounds_count == bitten_to_zombie:
             pile -= bitten
-            print(f'\n{bitten} infected humans are turning into zombies !!!')
+            print('\n{bitten} infected humans are turning into zombies !!!'.format(bitten=bitten))
             time.sleep(0.5) if sim_speed in [1, 2] else time.sleep(0)
             pop_fighting -= bitten
             population -= bitten
@@ -460,9 +463,12 @@ def fight(grid, zombies, population, pulped, rounds_passed, sim_speed):
             break
 
     print('\n' + '=' * 79)
-    print(f'Homes seized = {infected_added_this_fight}  Time = {rounds_count *5}s   '
-          f'Zombie increase = {(zombies_start_amount - zombies) * -1}   '
-          f'Human dead = {humans_start_amount - population}')
+    print('Homes seized = {infected_added_this_fight}  Time = {rct_x5}s   '
+          'Zombie increase = {zi}   '
+          'Human dead = {hd}'
+          .format(infected_added_this_fight=infected_added_this_fight,
+                  rct_x5=rounds_count*5, zi=(zombies_start_amount - zombies) * -1,
+                  hd=humans_start_amount - population))
     print('=' * 79)
     new_time = rounds_passed + rounds_count
 
@@ -637,8 +643,9 @@ def f_weather(daytime):
                    ('dry', 'dry', 'damp', 'light rain', 'rains'), ('is warm', 'is cool', 'is hot',
                                                                    'is cold', 'is moderately warm'))
         
-        r_weather = (f'It is {random.choice(weather[0])} and {random.choice(weather[1])}. Also '
-                     f'{random.choice(weather[2])} and {random.choice(weather[3])}.')
+        r_weather = ('It is {wth1} and {wth2}. Also {wth3} and {wth4}.'
+                     .format(wth1=random.choice(weather[0]), wth2=random.choice(weather[1]),
+                             wth3=random.choice(weather[2]), wth4=random.choice(weather[3])))
 
         return r_weather
 

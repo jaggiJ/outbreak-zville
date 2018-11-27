@@ -16,10 +16,10 @@ import zville  # zville functions
 import data  # zville database
 
 # DEBUGGING SET_UP #levels:debug, info, warning, error, critical
-#logging.basicConfig(filename='debug_zville.txt', level=logging.DEBUG,
-#                    format='%(asctime)s - %(levelname)s - %(message)s', datefmt='%d/%m/%Y %H:%M:%S')  # DEBUG to file
-logging.basicConfig(level=logging.DEBUG, format='%(asctime)s - %(levelname)s - %(message)s')  # DEBUG to console
-logging.disable(logging.INFO)  # disables all logging messages at <ERROR> or lover level
+logging.basicConfig(filename='debug_zville.txt', level=logging.DEBUG,
+                    format='%(asctime)s - %(levelname)s - %(message)s', datefmt='%d/%m/%Y %H:%M:%S')  # DEBUG to file
+# logging.basicConfig(level=logging.DEBUG, format='%(asctime)s - %(levelname)s - %(message)s')  # DEBUG to console
+logging.disable(logging.DEBUG)  # disables all logging messages at <ERROR> or lover level
 
 sim_speed = 2  # need to be saved between simulations so its outside loop
 saved_family = ()  # tuple here will store designed family
@@ -77,7 +77,8 @@ while True:
                     sim_speed = int(input())
                     if sim_speed not in [1, 2, 3]:
                         raise ValueError
-                    print(f' SPEED SET = {sim_speed} '.center(50, '+'))
+                    print_s = ' SPEED SET = {sim_speed} '.format(sim_speed=sim_speed)
+                    print(print_s.center(50, '+'))
                     break
                 except ValueError:
                     print('Type an integer in range 1-3'.center(50, '='))
@@ -150,16 +151,18 @@ while True:
         patient_zero=patient_zero)
 
     twist_a = (
-        f'Everybody are shocked.\n{random.choice(intro_family)} crouches trying to help and '
-        f'something terrific happens...\n{patient_zero} turns into a zombie and attacks '
-        f'the living!\nBlood rushes forth...\n'
-        f'Soon there are {initial_wave} zombies shuffling toward nearest house...\n\n')
+        'Everybody are shocked.\n{random_intro_family} crouches trying to help and '
+        'something terrific happens...\n{patient_zero} turns into a zombie and attacks '
+        'the living!\nBlood rushes forth...\n'
+        'Soon there are {initial_wave} zombies shuffling toward nearest house...\n\n')\
+        .format(random_intro_family=random.choice(intro_family),
+                patient_zero=patient_zero, initial_wave=initial_wave)
 
     twist_b = (
         'There is nobody at hand to help. After a minute someone notices '
-        f'lying body\n... and runs away.\nMeanwhile {patient_zero} arises as a'
+        'lying body\n... and runs away.\nMeanwhile {patient_zero} arises as a'
         ' zombie and shuffles toward nearest house.\nThere is'
-        ' just this one zombie to brave new world...\n\n')
+        ' just this one zombie to brave new world...\n\n').format(patient_zero=patient_zero)
 
     # how fast story is printed out
     if sim_speed == 1:
@@ -187,7 +190,7 @@ while True:
     zville.press_enter() if sim_speed in [1, 2] else time.sleep(0)
 
     # NOW BUNCH OF VARIABLES FOR COMING SIMULATION
-    logging.info('Bunch of variables.')
+    logging.info('Bunch of variables after beginning scene.')
     pulped_body = 0
     grid_data, houses_number   = zville.gen_grid(village_pop)             # takes: population size, returns: grid_data (list of lists) and houses_number(integer)
     family_custom = False                                                 # Is family customised and saved by user ? Used for zville.family_fight()
@@ -203,6 +206,7 @@ while True:
     countdown_set = int(25 / zed_speed) + 1  # 25 meters to go / zombie game speed + 1 because we round up to prevent exception if 0
 
     # CHOOSING RANDOM TILES FOR PATIENT ZERO AND FAMILY HOUSE LOCATION
+    logging.info('# CHOOSING RANDOM TILES FOR PATIENT ZERO AND FAMILY HOUSE LOCATION')
     # first infected cell
     temp_x = random.randint(0, len(grid_data)-1)
     grid_data[temp_x][random.randint(0, len(grid_data[temp_x])-1)] = '░'
@@ -218,11 +222,14 @@ while True:
             break
 
     # INITIAL DATA PRINTED OUT
+    logging.info('# INITIAL DATA PRINTED OUT')
     print('=' * 79)
     print('zombie speed =', zed_speed_kmh, 'kmh')
-    print(f'population of humans = {current_pop}')
+    print('population of humans = {current_pop}'.format(current_pop=current_pop))
     print('virus incubation time = 60 seconds')
-    print(f' {village_name.upper()}  {village_pop} villagers '.center(79, '='))  # Prints village name and population above grid
+    print_s = ' {village_name}  {village_pop} villagers '\
+        .format(village_name=village_name.upper(), village_pop=village_pop)
+    print(print_s.center(79, '='))  # Prints village name and population above grid
 
     # draws grid for first time with one infected cell and with family location in bright cell
     zville.draw_grid_data(grid_data)
@@ -245,12 +252,13 @@ while True:
         time.sleep(0)
 
     # MAIN LOOP FOR VIRUS SPREAD, iteration 5 sec
+    logging.info('# MAIN LOOP FOR VIRUS SPREAD')
     while True:
         # ZOMBIES vs VILLAGERS FIGHT INSTANCE
         if countdown_set == 0:
             print('=' * 79)
-            print(
-                f'defences shattered, {current_zombies} zombies attack !')
+            print('defences shattered, {current_zombies} zombies attack !'
+                  .format(current_zombies=current_zombies))
             print('=' * 79)
 
             # zville.fight() and its arguments
@@ -264,6 +272,7 @@ while True:
             zville.draw_grid_data(grid_data)
 
             # FAMILY FIGHT SECTION zville.family_fight()
+            logging.debug(' # FAMILY FIGHT SECTION')
             # checks if family alive and if family tile in infected cell, if yes triggers zville.family_fight()
             if family_custom != 'dead' and grid_data[family_coord[0]][family_coord[1]] == '░':
 
@@ -282,8 +291,9 @@ while True:
             # how much rounds it take to move the swarm to next fight ?
             countdown_set = int(25 / zed_speed) + 1  # 25 meters to go / zombie game speed + 1 because we round up to prevent exception if 0
 
-            print(f'\npopulation of humans  = {current_pop}')
-            print(f'population of zombies = {current_zombies}     pulped bodies = {pulped_body}\n')
+            print('\npopulation of humans  = {current_pop}'.format(current_pop=current_pop))
+            print('population of zombies = {current_zombies}     pulped bodies = {pulped_body}\n'
+                  .format(current_zombies=current_zombies, pulped_body=pulped_body))
 
             # time delay at end of fight
             if sim_speed == 1:
@@ -291,6 +301,7 @@ while True:
             time.sleep(4) if sim_speed == 2 else time.sleep(0)
 
         # VARIOUS
+        logging.debug('# VARIOUS')
         countdown_set -= 1
 
         if current_pop < 1:  # check for new game condition
@@ -306,14 +317,17 @@ while True:
 
         # time delay for zombies moving
         time.sleep(0.05) if sim_speed in [1, 2] else time.sleep(0)
-        print(f'{timer[0]}:{timer[1]} min passed')
+        print('{timer_min}:{timer_sec} min passed'.format(timer_min=timer[0], timer_sec=timer[1]))
 
     if zombies_win:
-        print(f'The village has been wiped out in {timer[0]}:{timer[1]} min')
-        print(f'Zombies are crawling among smoldering ruins of {village_name}.')
-        print(f'Pulped corpses left for eating = {pulped_body}.')
+        print('The village has been wiped out in {timer_m}:{timer_s} min'.format(timer_m=timer[0],
+                                                                                 timer_s=timer[1]))
+        print('Zombies are crawling among smoldering ruins of {village_name}.'
+              .format(village_name=village_name))
+        print('Pulped corpses left for eating = {pulped_body}.'.format(pulped_body=pulped_body))
 
     # PLAY AGAIN ?
+    logging.info('# PLAY AGAIN ?')
     answer = zville.yes_or_no('Do you want to run simulation again ?')
 
     if answer == 'no' and current_zombies > 1:  # no, zombies won
