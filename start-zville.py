@@ -1,4 +1,4 @@
-#!/usr/bin/env python3
+#!/usr/bin/env python
 
 """
 BSD 3-Clause License
@@ -203,7 +203,7 @@ while True:
     round_count     = 1                                                   # how many 5 sec rounds passed
     timer = [0, 0]  # minutes, seconds
     # how much rounds it take to move the swarm to next fight ?
-    countdown_set = int(25 / zed_speed) + 1  # 25 meters to go / zombie game speed + 1 because we round up to prevent exception if 0
+    countdown_set = int(25 / zed_speed) + 1  # 25 meters distance / zed speed decreased + 1 because we round up to prevent exception if 0
 
     # CHOOSING RANDOM TILES FOR PATIENT ZERO AND FAMILY HOUSE LOCATION
     logging.info('# CHOOSING RANDOM TILES FOR PATIENT ZERO AND FAMILY HOUSE LOCATION')
@@ -308,12 +308,14 @@ while True:
             zombies_win = True
             break
 
-        # updating time and iteration
+        # iteration + 1 counter update
         round_count += 1
-        timer[1] += 5
+
+        # updating time 5 seconds per iteration, translating 60s to 1m,
+        timer[1] += 5  # seconds
         if timer[1] == 60:
             timer[1] = 0
-            timer[0] += 1
+            timer[0] += 1  # minutes
 
         # time delay for zombies moving
         time.sleep(0.05) if sim_speed in [1, 2] else time.sleep(0)

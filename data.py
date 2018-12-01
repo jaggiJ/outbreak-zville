@@ -1,4 +1,3 @@
-#! python3
 """
 Contains various data for outbreak zville simulation
 """

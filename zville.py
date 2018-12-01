@@ -1,4 +1,4 @@
-#!/usr/bin/env python3
+#!/usr/bin/env python
 
 """
 BSD 3-Clause License
@@ -325,6 +325,7 @@ def fight(grid, zombies, population, pulped, rounds_passed, sim_speed):
     # REMOVING ATTACKED TILES IF NOT ENOUGH ZOMBIES - to maintain siege needed 1 + (3 * per extra cell)
     zombies_needed_for_siege = 1 + (3 * len(grid_attacked))
 
+    # reduces attacked tiles if more than 1 and not enough zombies
     while len(grid_attacked) > 1 and zombies_needed_for_siege > zombies:
 
         del grid_attacked[random.randint(0, len(grid_attacked) - 1)]
