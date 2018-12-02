@@ -1,10 +1,10 @@
 ### Outbreak Zville v0.21 is up 
 
-Current version of outrebak-zville is simulation of zombie-virus spread in small isolated place.  
-It's based on few factors like percentage chance to survive zombie-human encounter, speed of zombie, 
-potential for resistance, zombie behaviour, virus latency.  
+Current version of outbreak-zville is simulation of zombie-virus spread in small isolated place.  
+It's based on few factors like percentage chance to survive zombie-human encounter,  
+speed of zombie, potential for resistance, zombie behaviour, virus latency.  
 Default values predict that it takes around __one hour for zombies to wipe out a village__ of size 
-200-2500 (Romero's LatencyHappy). It seems, that there are also considerable chances it can be stopped.  
+200-2500. It seems, that there are also considerable chances it can be stopped.  
 Simulation runs in command line interface, has basic ascii graphic and  
 is written in procedural python with standard library (python2.7+ compatibility).  
 
