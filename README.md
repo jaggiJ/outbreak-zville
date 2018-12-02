@@ -22,4 +22,6 @@ is written in procedural python with standard library (python2.7+ compatibility)
 
 **Support zville-zombie$** -> [https://www.patreon.com/zville](https://www.patreon.com/zville)    ![Imgur](https://i.imgur.com/S44353Z.png)  
 
+**Future? of outbreak-zville** -> [https://github.com/jaggiJ/outbreak-zville/wiki/Future-of-outbreak-zville](https://github.com/jaggiJ/outbreak-zville/wiki/Future-of-outbreak-zville)
+
 **Realism monitoring** -> [https://github.com/jaggiJ/outbreak_zville/wiki/Realism-status](https://github.com/jaggiJ/Outbreak-Zville/wiki/Realism-status)
