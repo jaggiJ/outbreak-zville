@@ -10,9 +10,9 @@ There is also more personal scope of zombie encounter. When virus reaches certai
 home, focus is changed to present family versus zombies battle.  
 User can determine size and names for village and family or choose random.  
 Simulation runs in command line interface, has basic ascii graphic and  
-is written in procedural python with standard library (python2.7+ compatibility).  
+is written in procedural python with standard library (python3+ compatibility).  
 
-**Fast download & run for Windows[7, 8, 10]** -> [zville021.exe](https://github.com/jaggiJ/Outbreak-Zville/releases/download/v0.21/zville021.exe)   **Linux** -> [zville-v021.tar.gz](https://github.com/jaggiJ/Outbreak-Zville/releases/download/v0.21/zville-v021.tar.gz)
+**Fast download & run for Windows[7, 8, 10]** -> [zville021.exe](https://github.com/jaggiJ/Outbreak-Zville/releases/download/v0.21/zville021.exe)  
 
 ![Imgur](https://i.imgur.com/d5SR4Qv.png)
 
