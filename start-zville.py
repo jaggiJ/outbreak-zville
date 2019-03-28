@@ -1,37 +1,71 @@
 #!/usr/bin/env python3
-
+# -*- coding: utf-8 -*-
 """
+Simulation of zombie virus in village.
+
 BSD 3-Clause License
+
 Copyright (c) 2018, jaggiJ (jagged93 <AT> gmail <DOT> com), Aleksander Zubert
 All rights reserved.
-Simulation of zombie virus in village.
+
+Redistribution and use in source and binary forms, with or without
+modification, are permitted provided that the following conditions are met:
+
+* Redistributions of source code must retain the above copyright notice, this
+  list of conditions and the following disclaimer.
+
+* Redistributions in binary form must reproduce the above copyright notice,
+  this list of conditions and the following disclaimer in the documentation
+  and/or other materials provided with the distribution.
+
+* Neither the name of the copyright holder nor the names of its
+  contributors may be used to endorse or promote products derived from
+  this software without specific prior written permission.
+
+THIS SOFTWARE IS PROVIDED BY THE COPYRIGHT HOLDERS AND CONTRIBUTORS "AS IS"
+AND ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE
+IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE ARE
+DISCLAIMED. IN NO EVENT SHALL THE COPYRIGHT HOLDER OR CONTRIBUTORS BE LIABLE
+FOR ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL
+DAMAGES (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS OR
+SERVICES; LOSS OF USE, DATA, OR PROFITS; OR BUSINESS INTERRUPTION) HOWEVER
+CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT LIABILITY,
+OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE
+OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
+
 """
 
-import random  # random numbers and choices
-import sys  # sys.exit()
-import time  # time delays time.sleep()
 import datetime  # new game with village designed before
 import logging  # debugging module
-import zville  # zville functions
+import random  # random numbers and choices
+import sys  # sys.exit() sys.argv
+import time  # time delays time.sleep()
+
 import data  # zville database
+import zville  # zville functions
 
-# DEBUGGING SET_UP #levels:debug, info, warning, error, critical
-logging.basicConfig(filename='debug_zville.txt', level=logging.DEBUG,
-                    format='%(asctime)s - %(levelname)s - %(message)s', datefmt='%d/%m/%Y %H:%M:%S')  # DEBUG to file
-# logging.basicConfig(level=logging.DEBUG, format='%(asctime)s - %(levelname)s - %(message)s')  # DEBUG to console
-logging.disable(logging.DEBUG)  # disables all logging messages at <ERROR> or lover level
+# SETTING UP
 
+# debugging setup #levels:debug, info, warning, error, critical
+# logging to file
+# logging.basicConfig(filename='debug_zville.txt', level=logging.DEBUG,
+#                    format='%(asctime)s - %(levelname)s - %(message)s', datefmt='%d/%m/%Y %H:%M:%S')  # DEBUG to file
+# logging to console
+logging.basicConfig(level=logging.DEBUG, format='%(asctime)s - %(levelname)s - %(message)s')  # DEBUG to console
+# logging levels to disable
+logging.disable(logging.DEBUG)  # disables all logging messages at <LEVEL> or lover level
+
+# variables setup
 sim_speed = 2  # need to be saved between simulations so its outside loop
 saved_family = ()  # tuple here will store designed family
 saved_village = ()  # tuple here will store designed village
 random_village = True
 random_family = True
-logging.info('Starting main loop.')
 
 # MAIN LOOP
 while True:
     # SETTING_UP VARIABLES
-    logging.info('# setting up variables')
+    logging.info('Started main loop, # setting up variables')
     familyChar = []
     familyStats = []
     village_name = ''
@@ -48,7 +82,7 @@ while True:
 
     real_time = None
 
-    intro_family, spam = zville.family_gen(True)  # spam to hold irrelevant return value
+    intro_family, spam = zville.family_gen(True)
     initial_wave = len(intro_family)
     patient_zero = random.choice(intro_family)
     zombies_win = False  # useful for end game code
@@ -56,7 +90,8 @@ while True:
     # MAIN MENU CODE
     logging.info('User menu loop')
     while True:  # Handles user menu choices before game starts
-        main_choice = zville.user_menu_choice()  # Main game menu returns integer
+        # zville.user_menu_choice(), # Main game menu returns integer
+        main_choice = zville.user_menu_choice()
 
         if main_choice == 0:  # Intro game
             zville.intro_sim(data.STORY)  # Intro story
@@ -71,6 +106,7 @@ while True:
             while True:
                 try:
                     print(' Set sim speed: '.center(50, '='))
+                    print('Choose digit to set simulation speed')
                     print('\n1 - controlled by user pressing or holding enter key\n\n'
                           '2 - controlled by time intervals (default speed)\n\n3 - instant '
                           'simulation running to the end')
@@ -92,26 +128,22 @@ while True:
             break
 
         elif main_choice == 2:  # Start Designed Sim, make checks whether family
-                                # or village are designed by user and asks for confirmation
+            # or village are designed by user and asks for confirmation
             if not random_family and not random_village:
                 print('Family: ' + ' '.join(familyChar), '\nvillage is: ', village_name,
                       village_pop, 'sim speed =', sim_speed)
-
             elif not random_family and random_village:
                 print('Family: ' + ' '.join(familyChar), '\nVillage name and size will be random '
-                                                         'and sim speed =', sim_speed)
+                      'and sim speed =', sim_speed)
                 village_name, village_pop, real_time = zville.village_gen(random_village)  # case where only village is random,
                 # if above is not generated here causes IndexError: list index out of range at introduction
-
             elif random_family and not random_village:
                 print('Village: ', village_name, village_pop, '\nFamily members will be random and '
-                                                              'sim speed =', sim_speed)
+                      'sim speed =', sim_speed)
                 familyChar, familyStats = zville.family_gen(random_family)
-
             else:
                 print('Nothing designed yet.')
                 continue
-
             if zville.yes_or_no('Do you want to start simulation with those settings?') == 'no':
                 print('\nSetting village and family to random.')
                 random_family = True
@@ -128,13 +160,11 @@ while True:
             village_name, village_pop, real_time = zville.village_gen(random_village)
             saved_village = (village_name, village_pop)  # retaining village data for next games
             continue
-
         elif main_choice == 4:  # Design Family
             random_family = False
             familyChar, familyStats = zville.family_gen(random_family)
             saved_family = (tuple(familyChar), tuple(familyStats))  # saves family for next game, must be tuple to NOT reference familyChar familyStats lists
             continue
-
         elif main_choice == 6:  # Exit Sim
             sys.exit()
 
@@ -145,10 +175,10 @@ while True:
         'Village {Yeovil}  {date_time}\npopulation size {p1530}\n{r_weather}\nThere {are}'
         '{John_and_Mark}\n...{doing_shopping}.\nAll of sudden {patient_zero} falls on the '
         'ground, pale like snow and is all in tremors...\n').format(
-        Yeovil=village_name, date_time=real_time, p1530=str(village_pop),
-        r_weather=zville.f_weather('day'), are='is ' if len(intro_family) == 1 else 'are ',
-        John_and_Mark=', '.join(intro_family), doing_shopping=random.choice(data.LOCATIONS),
-        patient_zero=patient_zero)
+            Yeovil=village_name, date_time=real_time, p1530=str(village_pop),
+            r_weather=zville.f_weather('day'), are='is ' if len(intro_family) == 1 else 'are ',
+            John_and_Mark=', '.join(intro_family), doing_shopping=random.choice(data.LOCATIONS),
+            patient_zero=patient_zero)
 
     twist_a = (
         'Everybody are shocked.\n{random_intro_family} crouches trying to help and '
@@ -197,10 +227,20 @@ while True:
     incubation_time = 12                                                  # x5 seconds (one round) Virus latency, how long until infected turns zombie
     current_pop     = village_pop - initial_wave                          # amount of population now, integer
     current_zombies = initial_wave                                        # amount of zombies now, integer
-    zed_speed_kmh   = 3.22
-    zed_speed       = zville.speed_round(kmh=3.22, delay=4, round_sec=5)  # zombies speed per game round assuming 3.22kmh speed delay rate(average delay caused by eg breaking to home
-    family_cache = 0  # last amount of zombies per cell attacked, also used for human win condition check (turns to string and ends game)
-    round_count     = 1                                                   # how many 5 sec rounds passed
+
+    # various speed parameters
+
+    zed_speed_kmh   = 3.22                                              # set zeds speed here
+    # how hard for zombies is to move forward (home fortifications), used to calculate average zeds speed
+    obstacle_level  = 4
+    # how many seconds are in one round
+    round_sec = 5
+    # zville.speed_round() - average zombie speed per round
+    zed_speed       = zville.speed_round(zed_speed_kmh, obstacle_level, round_sec)
+    # last amount of zombies per cell attacked, also used for human win condition check (turns to string and ends game)
+    family_cache = 0
+    # rounds counter
+    round_count     = 1
     timer = [0, 0]  # minutes, seconds
     # how much rounds it take to move the swarm to next fight ?
     countdown_set = int(25 / zed_speed) + 1  # 25 meters distance / zed speed decreased + 1 because we round up to prevent exception if 0
@@ -209,16 +249,16 @@ while True:
     logging.info('# CHOOSING RANDOM TILES FOR PATIENT ZERO AND FAMILY HOUSE LOCATION')
     # first infected cell
     temp_x = random.randint(0, len(grid_data)-1)
-    grid_data[temp_x][random.randint(0, len(grid_data[temp_x])-1)] = '░'
+    grid_data[temp_x][random.randint(0, len(grid_data[temp_x])-1)] = '#'
 
     # family-cell location
     while True:  # loop asserts family-cell not infected
         int_y = random.randint(0, len(grid_data) - 1)  # (y coord),(eg 5) represent list number in grid data
         int_x = random.randint(0, len(grid_data[0]) - 1)  # x coord eg 0 represent value number in random list inside grid_data
-        family_coord = (int_y, int_x)  # tuple (y, x) eg (5, 0) < - list 5 value 0 of grid_data, is checked after fight and when is '░' triggers family_fight()
+        family_coord = (int_y, int_x)  # tuple (y, x) eg (5, 0) < - list 5 value 0 of grid_data, is checked after fight and when is '#' triggers family_fight()
 
-        if grid_data[int_y][int_x] != '░':  # checking if chosen coord doesn't contain infected tile
-            grid_data[int_y][int_x] = '█'  # turning grid representation to family icon if not infected tile
+        if grid_data[int_y][int_x] != '#':  # checking if chosen coord doesn't contain infected tile
+            grid_data[int_y][int_x] = '~'  # turning grid representation to family icon if not infected tile
             break
 
     # INITIAL DATA PRINTED OUT
@@ -274,7 +314,7 @@ while True:
             # FAMILY FIGHT SECTION zville.family_fight()
             logging.debug(' # FAMILY FIGHT SECTION')
             # checks if family alive and if family tile in infected cell, if yes triggers zville.family_fight()
-            if family_custom != 'dead' and grid_data[family_coord[0]][family_coord[1]] == '░':
+            if family_custom != 'dead' and grid_data[family_coord[0]][family_coord[1]] == '#':
 
                 # FAMILY_FIGHT() FUNCTION RUNS HERE !
                 family_custom, familyChar, familyStats, zombiesPulped = \

@@ -1,22 +1,6 @@
-# files from Pycharm
-.idea
-.tmp.drivedownload
-
-# dev helpers
-useful_shortcuts.txt
-dev_goals.txt
-dev.py
-test.py
-test2.py
-os_diffs
-debug_zville.txt
-
 # git webpage
 _config.yml
 
-# synch_files
-.tmp.drivedownload
-
 # other
 __pycache__
-
+debug*

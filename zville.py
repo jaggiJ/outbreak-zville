@@ -1,4 +1,5 @@
-#!/usr/bin/env python
+#!/usr/bin/env python3
+# -*- coding: utf-8 -*-
 
 """
 BSD 3-Clause License
@@ -306,9 +307,9 @@ def fight(grid, zombies, population, pulped, rounds_passed, sim_speed):
         """
         for x in range(len(grid[y])):  # iterates through all values contained in list instance y # x is instance of value
 
-            if grid[y][x] in ['▓', '█']:  # 1. counts healthy tiles,
+            if grid[y][x] in ['@', '~']:  # 1. counts healthy tiles,
                 healthy_tiles += 1
-            if grid[y][x] == '░':  # 2 & 3
+            if grid[y][x] == '#':  # 2 & 3
 
                 infected_tiles.append((y, x))  # 2. makes list of infected tiles coord eg [(1, 4), (2, 3)]
 
@@ -316,7 +317,7 @@ def fight(grid, zombies, population, pulped, rounds_passed, sim_speed):
                 # area_scan = [(y-1, x), (y-1,x+1), (y,x+1), (y+1,x+1), (y+1,x), (y+1,x-1), (y,x-1), (y-1,x-1) ]  # N, NE, E, SE, S, SW, W, NW
                 for ry, rx in [(y-1, x), (y-1, x+1), (y, x+1), (y+1, x+1), (y+1, x), (y+1, x-1), (y, x-1), (y-1, x-1)]:  # rx relative x ry relative y
                     try:  # ref 'fry65' affected by chosen family tile graphical representation
-                        if ry >= 0 and rx >= 0 and grid[ry][rx] in ['▓', '█'] and (ry, rx) not in grid_attacked:  # absolute coord must be 0+ otherwise they are out of grid
+                        if ry >= 0 and rx >= 0 and grid[ry][rx] in ['@', '~'] and (ry, rx) not in grid_attacked:  # absolute coord must be 0+ otherwise they are out of grid
                             grid_attacked.append((ry, rx))  # 3. makes list of grid_attacked coord eg [(1, 4), (2, 3)]
                             break  # why it breaks ? Because infected tile found his victim healthy tile
                     except IndexError:  # in case searched coord is of out of range, except ignores error
@@ -448,13 +449,13 @@ def fight(grid, zombies, population, pulped, rounds_passed, sim_speed):
         if population == 0:  # end game condition, turning all into infected
 
             for y, x in grid_attacked:  # e.g. [(4, 1), (4, 0)]
-                grid[y][x] = '░'
+                grid[y][x] = '#'
                 infected_added_this_fight += 1
             break
 
         # turn random choice tile from grid_attacked into infected
         temp_yx = random.choice(grid_attacked)  # tuple with y, x coord
-        grid[temp_yx[0]][temp_yx[1]] = '░'
+        grid[temp_yx[0]][temp_yx[1]] = '#'
         grid_attacked.remove(temp_yx)
         infected_tiles_amount += 1
         infected_added_this_fight += 1
@@ -506,7 +507,7 @@ def gen_grid(population):
             y_example += 1
 
     # list comprehension returns grid which (y * x * 4) == nearest <=population_size, e.g. grid (7 * 7) is most close and <= population 200
-    grid = [['▓'] * x_values for i in range(y_lists)]
+    grid = [['@'] * x_values for i in range(y_lists)]
     houses_number = x_values * y_lists
 
     return grid, houses_number
