@@ -1,6 +1,6 @@
-### Outbreak Zville v0.21 is up 
+### Outbreak Zville v0.21 is up (FINAL) - No longer in development
 
-Current version of outbreak-zville is simulation of zombie-virus spread in small isolated place.  
+Final version of outbreak-zville is simulation of zombie-virus spread in small isolated place.  
 It's based on few factors like percentage chance to survive zombie-human encounter,  
 speed of zombie, potential for resistance, zombie behaviour, virus latency.  
 Default values predict that it takes around __one hour for zombies to wipe out a village__ of size 
@@ -17,11 +17,3 @@ is written in procedural python with standard library (python3+ compatibility).
 **Installation instructions**: [https://github.com/jaggiJ/outbreak_zville/wiki/Installation-Instructions](https://github.com/jaggiJ/Outbreak-Zville/wiki/Installation-Instructions)
 
 **Wiki** -> [https://github.com/jaggiJ/outbreak_zville/wiki](https://github.com/jaggiJ/Outbreak-Zville/wiki)
-
-**Development** -> [https://github.com/jaggiJ/outbreak_zville/projects/1](https://github.com/jaggiJ/Outbreak-Zville/projects/1)  
-
-**Support zville-zombie$** -> [https://www.patreon.com/zville](https://www.patreon.com/zville)  
-
-**Future? of outbreak-zville** -> [https://github.com/jaggiJ/outbreak-zville/wiki/Future-of-outbreak-zville](https://github.com/jaggiJ/outbreak-zville/wiki/Future-of-outbreak-zville)
-
-**Realism monitoring** -> [https://github.com/jaggiJ/outbreak_zville/wiki/Realism-status](https://github.com/jaggiJ/Outbreak-Zville/wiki/Realism-status)
