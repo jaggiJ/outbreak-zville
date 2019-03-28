@@ -1,4 +1,4 @@
-### Outbreak Zville v0.21 is up (FINAL) - No longer in development
+### Outbreak Zville v0.22 is up (FINAL) - No longer in development
 
 Final version of outbreak-zville is simulation of zombie-virus spread in small isolated place.  
 It's based on few factors like percentage chance to survive zombie-human encounter,  
